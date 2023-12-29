@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.study.springboot.api.request.CreateAndEditMemberRequest;
 import com.study.springboot.api.request.EditMemberInfo;
+import com.study.springboot.api.request.EditMemberPassword;
 import com.study.springboot.api.response.MemberDetail;
 import com.study.springboot.api.response.MemberList;
 import com.study.springboot.service.MemberService;
@@ -33,7 +34,7 @@ public class MemberApi {
 		return memberService.findAllMembers();
 	}
 	
-	@GetMapping("/member/{id}")
+	@GetMapping("/mypage/{id}")
 	public MemberDetail getMember(
 			@PathVariable(name="id") String id
 			) {
@@ -52,12 +53,22 @@ public class MemberApi {
 		}
 	}
 	
-	@PutMapping("/mypage/{id}")
-	public void editInfo(
+	@PutMapping("/mypage/{id}/editInfo")
+	public ResponseEntity<String> editInfo(
 			@PathVariable(name="id") String id,
 			@RequestBody EditMemberInfo request
 			) {
 		memberService.editMemberInfo(id, request);
+		return ResponseEntity.ok("회원정보가 성공적으로 수정되었습니다.");
+	}
+	
+	@PutMapping("/mypage/{id}/editPw")
+	public ResponseEntity<String> editPw(
+			@PathVariable(name="id") String id,
+			@RequestBody EditMemberPassword request
+			) {
+		memberService.editMemberPw(id, request);
+		return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
 	}
 	
 	
