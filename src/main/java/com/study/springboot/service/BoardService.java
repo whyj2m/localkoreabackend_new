@@ -91,20 +91,20 @@ public class BoardService {
 		    List<Board> boards = boardRepository.findByCno(category);
 		    
 		    // 조회된 게시글을 BoardList로 변환하여 반환
-		    return boards.stream()
-		            .map(board -> BoardList.builder()
-		            		.bno(board.getBno())
-		                    .title(board.getTitle())
-		                    .content(board.getContent())
-		                    .viewCnt(board.getViewCnt())
-		                    .regDate(ZonedDateTime.now())
-		                    .updateDate(ZonedDateTime.now())	            
-		                    .boardCno(board.getCno().getCno())
-		                    .locationCno(board.getLocno().getLocno())
-		                    .location(board.getLocation())
-		                    .build())
-		            .collect(Collectors.toList());
-		}
+//		    return boards.stream()
+//		            .map(board -> BoardList.builder()
+//		            		.bno(board.getBno())
+//		                    .title(board.getTitle())
+//		                    .content(board.getContent())
+//		                    .viewCnt(board.getViewCnt())
+//		                    .regDate(ZonedDateTime.now())
+//		                    .updateDate(ZonedDateTime.now())	            
+//		                    .boardCno(board.getCno().getCno())
+//		                    .locationCno(board.getLocno().getLocno())
+//		                    .location(board.getLocation())
+//		                    .build())
+//		            .collect(Collectors.toList());
+//		}
 	
 		
 		
