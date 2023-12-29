@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.study.springboot.api.request.CreateAndEditMemberRequest;
 import com.study.springboot.api.request.EditMemberInfo;
+import com.study.springboot.api.request.EditMemberPassword;
 import com.study.springboot.api.response.MemberDetail;
 import com.study.springboot.api.response.MemberList;
 import com.study.springboot.entity.Member;
@@ -82,6 +83,13 @@ public class MemberService {
 		Member member = memberRepository.findById(id)
 				.orElseThrow(()->new RuntimeException("존재하지 않는 id입니다."));
 		member.changeMemberDetail(request.getEmail(), request.getName(), request.getPhoneNum());
+		memberRepository.save(member);
+	}
+
+	public void editMemberPw(String id, EditMemberPassword request) {
+		Member member = memberRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("존재하지 않는 id입니다."));
+		member.changeMemberPassword(request.getPassword());
 		memberRepository.save(member);
 	}
 

@@ -40,6 +40,11 @@ public class Member {
 		this.phoneNum = phoneNum;
 		this.updatedAt = ZonedDateTime.now();
 	}
+	
+	public void changeMemberPassword(String password) {
+		this.password = password;
+		this.updatedAt = ZonedDateTime.now();
+	}
 
 
 //    public void patch(Member member) {

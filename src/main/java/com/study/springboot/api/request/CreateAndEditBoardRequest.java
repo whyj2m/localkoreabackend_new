@@ -5,10 +5,12 @@ import java.time.ZonedDateTime;
 import com.study.springboot.entity.Member;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateAndEditBoardRequest {
@@ -19,5 +21,8 @@ public class CreateAndEditBoardRequest {
     private ZonedDateTime regDate; 
 	private ZonedDateTime updateDate; 
 	private Member id;
+	private Long boardCno; // 카테고리 번호
+	private Long locationCno; // 지역 카테고리 번호
+	private String location;
 
 }

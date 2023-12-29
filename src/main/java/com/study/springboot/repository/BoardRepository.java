@@ -15,10 +15,13 @@ import com.study.springboot.entity.Heart;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long>{
 	
-	List<Board> findByTitleContaining(String keyword);
+	public List<Board> findByTitleContaining(String keyword);
 	
 	// 카테고리별 조회
-	List<Board> findByCno(BoardCategory category);
+	public List<Board> findByCno(BoardCategory category);
+
+	// 카테고리 숫자를 카테고리명으로 조회
+//	public List<BoardCategory> findByLocationCno(BoardCategory category);
 	 
 
 }

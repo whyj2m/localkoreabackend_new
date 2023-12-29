@@ -38,12 +38,12 @@ public class BoardApi {
 //	}
 	
 	// 관광지 추천 게시글 조회
-//	@GetMapping("/board/tourisSpot")
-//	public List<BoardList> getBoardList(){
-//		return boardService.findByTourisSpot();
-//	}
+	@GetMapping("/board/tourisSpot")
+	public List<BoardList> getBoardList(){
+		return boardService.findByTourisSpot();
+	}
 	
-	// 관광지 추천 게시글 조회
+	// 여행메이트 게시글 조회
 	@GetMapping("/board/company")
 	public List<BoardList> getCompanyList(){
 		return boardService.findByCompany();
@@ -57,17 +57,19 @@ public class BoardApi {
 //		return boardService.findById(bno);
 //	}
 //	
-//	@PostMapping("/board")
-//	public ResponseEntity<String> inserBoard(
-//			@RequestBody CreateAndEditBoardRequest request
-//			){
-//		try {
-//			boardService.insertBoard(request);
-//			return ResponseEntity.ok("Data Input Completed");
-//		} catch (Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error" + e.getMessage());
-//		}
-//	}
+	// 게시글 작성
+	@PostMapping("/board/boardWrite")
+	public ResponseEntity<String> inserBoard(
+			@RequestBody CreateAndEditBoardRequest request
+			){
+		try {
+			boardService.insertBoard(request);
+			return ResponseEntity.ok("Data Input Completed");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error" + e.getMessage());
+		}
+	}
+	
 //	
 //	@PutMapping("/board/{bno}")
 //	public void editBoard(
