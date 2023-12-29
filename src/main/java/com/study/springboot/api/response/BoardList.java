@@ -22,4 +22,5 @@ public class BoardList {
 	private Member id; // id
 	private Long boardCno; // 카테고리 번호
 	private Long locationCno; // 지역 카테고리 번호
+	private String location;
 }
