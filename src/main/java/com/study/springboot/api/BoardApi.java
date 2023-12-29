@@ -32,7 +32,6 @@ public class BoardApi {
 	private BoardService boardService;
 	
 	// 게시글 전체 조회
-	// 관광지 추천 게시글 조회
 //	@GetMapping("/board")
 //	public List<BoardList> getBoardList(){
 //		return boardService.findAllBoard();
@@ -43,6 +42,13 @@ public class BoardApi {
 	public List<BoardList> getBoardList(){
 		return boardService.findByTourisSpot();
 	}
+	
+	// 관광지 추천 게시글 조회
+	@GetMapping("/board/company")
+	public List<BoardList> getCompanyList(){
+		return boardService.findByCompany();
+	}
+
 	
 //	@GetMapping("/board/{bno}")
 //	public BoardDetail getBoard(
