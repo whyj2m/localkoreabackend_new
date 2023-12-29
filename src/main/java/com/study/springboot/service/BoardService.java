@@ -75,6 +75,7 @@ public class BoardService {
 	                    .updateDate(ZonedDateTime.now())	            
 	                    .boardCno(board.getCno().getCno())
 //	                    .locationCno(board.getLocno().getLocno())
+	                    // 수정중
 	                    
 	                    
 	                    .build())
