@@ -38,10 +38,10 @@ public class BoardApi {
 //	}
 	
 	// 관광지 추천 게시글 조회
-	@GetMapping("/board/tourisSpot")
-	public List<BoardList> getBoardList(){
-		return boardService.findByTourisSpot();
-	}
+//	@GetMapping("/board/tourisSpot")
+//	public List<BoardList> getBoardList(){
+//		return boardService.findByTourisSpot();
+//	}
 	
 	// 관광지 추천 게시글 조회
 	@GetMapping("/board/company")
