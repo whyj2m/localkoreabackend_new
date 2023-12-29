@@ -49,14 +49,6 @@ public class BoardApi {
 		return boardService.findByCompany();
 	}
 
-	
-//	@GetMapping("/board/{bno}")
-//	public BoardDetail getBoard(
-//			@PathVariable(name = "bno") Long bno
-//			) {
-//		return boardService.findById(bno);
-//	}
-//	
 	// 게시글 작성
 	@PostMapping("/board/boardWrite")
 	public ResponseEntity<String> inserBoard(
@@ -70,6 +62,14 @@ public class BoardApi {
 		}
 	}
 	
+	
+	
+//	@GetMapping("/board/{bno}")
+//	public BoardDetail getBoard(
+//			@PathVariable(name = "bno") Long bno
+//			) {
+//		return boardService.findById(bno);
+//	}
 //	
 //	@PutMapping("/board/{bno}")
 //	public void editBoard(
