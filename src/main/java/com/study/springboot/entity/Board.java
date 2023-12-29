@@ -5,7 +5,6 @@ import java.time.ZonedDateTime;
 
 import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.entity.category.LocationCategory;
-import com.study.springboot.entity.category.PlaceCategory;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,9 +26,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "Board")
 @Entity
 public class Board {
-	
-	
-//    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = "boardSequence")
 
 	@Id
     @SequenceGenerator (
@@ -58,6 +54,7 @@ public class Board {
 	@ManyToOne
 	@JoinColumn(name="location_cno", referencedColumnName = "locno")
 	private LocationCategory locno; // 지역 카테고리
+//	private String location;
 	
 	public void changeBoard(String title, String content) {
 		this.title = title;
