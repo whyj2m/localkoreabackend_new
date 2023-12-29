@@ -20,5 +20,13 @@ public class BoardDetail {
     private ZonedDateTime regDate; 
 	private ZonedDateTime updateDate; 
 	private Member id;
+	
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	public static class BoardCategory{
+		private Long cno;
+		private String cname;
+	}
 
 }

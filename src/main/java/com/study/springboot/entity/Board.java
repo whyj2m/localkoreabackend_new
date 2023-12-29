@@ -54,7 +54,7 @@ public class Board {
 	@ManyToOne
 	@JoinColumn(name="location_cno", referencedColumnName = "locno")
 	private LocationCategory locno; // 지역 카테고리
-//	private String location;
+	private String location;
 	
 	public void changeBoard(String title, String content) {
 		this.title = title;
