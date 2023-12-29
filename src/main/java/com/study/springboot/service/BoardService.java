@@ -79,7 +79,7 @@ public class BoardService {
 	            .collect(Collectors.toList());
 	}
 	
-	// 여행메이트 게시글 조회 findByCompany
+	// 여행메이트 게시글 조회
 	public List<BoardList> findByCompany() {
 	    // BoardCategory 객체 생성 및 초기화
 	    BoardCategory category = BoardCategory.builder().cno(2L).build();
@@ -108,10 +108,9 @@ public class BoardService {
 		Board board = Board.builder()
 							.title(request.getTitle())
 							.content(request.getContent())
-							.viewCnt(request.getViewCnt())
+//							.viewCnt(request.getViewCnt())
 							.regDate(ZonedDateTime.now())
 							.updateDate(ZonedDateTime.now())
-							
 //							.cno(request.getLocationCno())
 		                    .location(request.getLocation())
 							.build();
