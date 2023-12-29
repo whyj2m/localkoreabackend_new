@@ -56,13 +56,12 @@ public class BoardService {
 	
 	// 관광지 추천 게시글 조회
 	@Transactional
-	public List<BoardList> findByCompany() {
+	public List<BoardList> findByTourisSpot() {
 	    // BoardCategory 객체 생성 및 초기화
-	    BoardCategory category = BoardCategory.builder().cno(2L).build();
+	    BoardCategory category = BoardCategory.builder().cno(1L).build();
 	    
 	    // 해당 카테고리로 게시글 조회
 	    List<Board> boards = boardRepository.findByCno(category);
-//	    List<BoardCategory> cate = boardRepository.
 	    
 	    // 조회된 게시글을 BoardList로 변환하여 반환
 	    return boards.stream()
@@ -74,56 +73,56 @@ public class BoardService {
 	                    .regDate(ZonedDateTime.now())
 	                    .updateDate(ZonedDateTime.now())	            
 	                    .boardCno(board.getCno().getCno())
-//	                    .locationCno(board.getLocno().getLocno())
-	                    // 수정중
-	                    
-	                    
+	                    .locationCno(board.getLocno().getLocno())
+	                    .location(board.getLocation())
 	                    .build())
 	            .collect(Collectors.toList());
 	}
 	
-	// 여행메이트 게시글 조회
-//		public List<BoardList> findByTourisSpot() {
-//		    // BoardCategory 객체 생성 및 초기화
-//		    BoardCategory category = BoardCategory.builder().cno(1L).build();
-//		    
-//		    // 해당 카테고리로 게시글 조회
-//		    List<Board> boards = boardRepository.findByCno(category);
-//		    
-//		    // 조회된 게시글을 BoardList로 변환하여 반환
-//		    return boards.stream()
-//		            .map(board -> BoardList.builder()
-//		            		.bno(board.getBno())
-//		                    .title(board.getTitle())
-//		                    .content(board.getContent())
-//		                    .viewCnt(board.getViewCnt())
-//		                    .regDate(ZonedDateTime.now())
-//		                    .updateDate(ZonedDateTime.now())	            
-//		                    .boardCno(board.getCno().getCno())
-//		                    .locationCno(board.getLocno().getLocno())
-//		                    .location(board.getLocation())
-//		                    .build())
-//		            .collect(Collectors.toList());
-//		}
+	// 여행메이트 게시글 조회 findByCompany
+	public List<BoardList> findByCompany() {
+	    // BoardCategory 객체 생성 및 초기화
+	    BoardCategory category = BoardCategory.builder().cno(2L).build();
+		    
+    	// 해당 카테고리로 게시글 조회
+	    List<Board> boards = boardRepository.findByCno(category);
+	    
+	    // 조회된 게시글을 BoardList로 변환하여 반환
+	    return boards.stream()
+	            .map(board -> BoardList.builder()
+	            		.bno(board.getBno())
+	                    .title(board.getTitle())
+	                    .content(board.getContent())
+	                    .viewCnt(board.getViewCnt())
+	                    .regDate(ZonedDateTime.now())
+	                    .updateDate(ZonedDateTime.now())	            
+	                    .boardCno(board.getCno().getCno())
+	                    .locationCno(board.getLocno().getLocno())
+	                    .location(board.getLocation())
+	                    .build())
+	            .collect(Collectors.toList());
+		}
 	
+	// 글 작성
+	public Board insertBoard(CreateAndEditBoardRequest request) {
+		Board board = Board.builder()
+							.title(request.getTitle())
+							.content(request.getContent())
+							.viewCnt(request.getViewCnt())
+							.regDate(ZonedDateTime.now())
+							.updateDate(ZonedDateTime.now())
+							
+//							.cno(request.getLocationCno())
+		                    .location(request.getLocation())
+							.build();
+		boardRepository.save(board);
+		
+		return board;
+	}
 		
 		
 		
 		
-		
-//	@Transactional
-//	public Board insertBoard(CreateAndEditBoardRequest request) {
-//		Board board = Board.builder()
-//							.title(request.getTitle())
-//							.content(request.getContent())
-//							.viewCnt(request.getViewCnt())
-//							.regDate(ZonedDateTime.now())
-//							.updateDate(ZonedDateTime.now())
-//							.build();
-//		boardRepository.save(board);
-//		
-//		return board;
-//	}
 //	
 //	
 //	
