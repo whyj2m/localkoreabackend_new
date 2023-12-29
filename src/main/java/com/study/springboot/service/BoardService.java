@@ -83,14 +83,14 @@ public class BoardService {
 	}
 	
 	// 여행메이트 게시글 조회
-		public List<BoardList> findByTourisSpot() {
-		    // BoardCategory 객체 생성 및 초기화
-		    BoardCategory category = BoardCategory.builder().cno(1L).build();
-		    
-		    // 해당 카테고리로 게시글 조회
-		    List<Board> boards = boardRepository.findByCno(category);
-		    
-		    // 조회된 게시글을 BoardList로 변환하여 반환
+//		public List<BoardList> findByTourisSpot() {
+//		    // BoardCategory 객체 생성 및 초기화
+//		    BoardCategory category = BoardCategory.builder().cno(1L).build();
+//		    
+//		    // 해당 카테고리로 게시글 조회
+//		    List<Board> boards = boardRepository.findByCno(category);
+//		    
+//		    // 조회된 게시글을 BoardList로 변환하여 반환
 //		    return boards.stream()
 //		            .map(board -> BoardList.builder()
 //		            		.bno(board.getBno())
