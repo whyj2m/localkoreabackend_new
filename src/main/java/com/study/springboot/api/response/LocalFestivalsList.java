@@ -16,7 +16,7 @@ public class LocalFestivalsList {
     private String location;
     private String content;
     private String schedule;
-    private String viewCnt;
+    private Long viewCnt;
     private Location localNo;
 
 }

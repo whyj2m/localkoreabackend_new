@@ -98,4 +98,15 @@ public class LocalFestivalsService {
 		festivalsRepository.delete(festivals);
 	}
 
+	@Transactional
+	public void increaseViewCount(Long festivalNo) {
+	    LocalFestivals festival = festivalsRepository.findById(festivalNo)
+	            .orElseThrow(() -> new RuntimeException("축제를 찾을 수 없습니다."));
+
+	    // 조회수 증가
+	    festival.increaseViewCnt();
+	    // 변경 사항을 저장하
+	    festivalsRepository.save(festival);
+	}
+
 }

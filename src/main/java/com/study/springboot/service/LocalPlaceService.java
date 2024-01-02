@@ -107,5 +107,15 @@ public class LocalPlaceService {
 		LocalPlaces places = placesRepository.findById(placeNo).orElseThrow();
 		placesRepository.delete(places);
 	}
+	
+	@Transactional
+	public void increaseViewCount(Long placeNo) {
+	    LocalPlaces place = placesRepository.findById(placeNo)
+	            .orElseThrow(() -> new RuntimeException("장소를 찾을 수 없습니다."));
 
+	    // 조회수 증가
+	    place.increaseViewCnt();
+	    // 변경 사항을 저장
+	     placesRepository.save(place);
+	}
 }
