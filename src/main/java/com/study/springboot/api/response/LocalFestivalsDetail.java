@@ -5,8 +5,10 @@ import com.study.springboot.entity.Location;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class LocalFestivalsDetail {
@@ -16,7 +18,7 @@ public class LocalFestivalsDetail {
     private String location;
     private String content;
     private String schedule;
-    private String viewCnt;
+    private Long viewCnt;
     private Location localNo;
 
 }

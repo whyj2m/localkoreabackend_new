@@ -34,10 +34,20 @@ public class LocalPlacesApi {
 	}
 	
 	@GetMapping("/localPlace/{placeNo}")
-	public LocalPlacesDetail getPlace(
-			@PathVariable(name="placeNo") Long placeNo
-			) {
-		return localPlaceService.findById(placeNo);
+	public ResponseEntity<LocalPlacesDetail> getPlace(
+	        @PathVariable(name="placeNo") Long placeNo
+	) {
+	    LocalPlacesDetail place = localPlaceService.findById(placeNo);
+
+	    // 조회수를 1 증가시킴
+	    localPlaceService.increaseViewCount(placeNo);
+	    
+	    // viewCnt가 null이면 0으로 설정
+	    if (place.getViewCnt() == null) {
+	        place.setViewCnt(0L);
+	    }
+
+	    return ResponseEntity.ok(place);
 	}
 
 	@GetMapping("/localPlaces/{localNo}")
