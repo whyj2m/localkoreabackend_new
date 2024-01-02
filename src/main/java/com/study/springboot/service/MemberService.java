@@ -36,6 +36,10 @@ public class MemberService {
 		return member;
 	}
 	
+	public boolean checkIdDuplicate(String id) {
+		return memberRepository.existsById(id);
+	}
+	
 	public List<MemberList> findAllMembers(){
 		List<Member> members = memberRepository.findAll();
 		return members.stream().map((member) -> MemberList.builder()

@@ -54,5 +54,11 @@ public class LocalPlaces {
 		this.viewCnt = viewCnt;
 		this.heartCnt = heartCnt;
 	}
+	public void increaseViewCnt() {
+	    if (this.viewCnt == null) {
+	        this.viewCnt = 0L;
+	    }
+	    this.viewCnt++;
+	}
 
 }

@@ -34,11 +34,22 @@ public class LocalFestivalsApi {
 	}
 	
 	@GetMapping("/localFestival/{festivalNo}")
-	public LocalFestivalsDetail getFestival(
-			@PathVariable(name="festivalNo") Long festivalNo
-			) {
-		return localFestivalsService.findById(festivalNo);
+	public ResponseEntity<LocalFestivalsDetail> getFestival(
+	        @PathVariable(name = "festivalNo") Long festivalNo
+	) {
+	    LocalFestivalsDetail festival = localFestivalsService.findById(festivalNo);
+
+	    // 조회수를 1 증가시킴
+	    localFestivalsService.increaseViewCount(festivalNo);
+
+	    // viewCnt가 null이면 0으로 설정
+	    if (festival.getViewCnt() == null) {
+	        festival.setViewCnt(0L);
+	    }
+
+	    return ResponseEntity.ok(festival);
 	}
+
 
 	@GetMapping("/localFestivals/{localNo}")
 	public List<LocalFestivalsList> getFestivalByLocalNo(
