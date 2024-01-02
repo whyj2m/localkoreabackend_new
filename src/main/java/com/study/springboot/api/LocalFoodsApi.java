@@ -14,14 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.study.springboot.api.request.CreateAndEditLocalFoodsRequest;
-import com.study.springboot.api.request.CreateAndEditMemberRequest;
 import com.study.springboot.api.response.LocalFoodsDetail;
 import com.study.springboot.api.response.LocalFoodsList;
-import com.study.springboot.api.response.MemberDetail;
-import com.study.springboot.api.response.MemberList;
 import com.study.springboot.entity.Location;
 import com.study.springboot.service.LocalFoodsService;
-import com.study.springboot.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
