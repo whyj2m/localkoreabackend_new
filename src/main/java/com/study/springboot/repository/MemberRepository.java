@@ -9,6 +9,6 @@ import com.study.springboot.entity.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, String>{
-
-
+	Member findByEmail(String email);
+	boolean existsById(String id);
 }
