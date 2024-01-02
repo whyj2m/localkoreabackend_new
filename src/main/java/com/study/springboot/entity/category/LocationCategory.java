@@ -29,5 +29,5 @@ public class LocationCategory {
     @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = "locationSequence")
     private Long locno;
 	private String localName; // 관광지 카테고리명
-
+	
 }
