@@ -19,6 +19,7 @@ import com.study.springboot.api.response.BoardDetail;
 import com.study.springboot.api.response.BoardList;
 import com.study.springboot.api.response.LocationDetail;
 import com.study.springboot.api.response.LocationList;
+import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.service.BoardService;
 import com.study.springboot.service.LocationService;
 
@@ -35,6 +36,12 @@ public class BoardApi {
 //	@GetMapping("/board")
 //	public List<BoardList> getBoardList(){
 //		return boardService.findAllBoard();
+//	}
+	
+	// 카테고리별 api
+//	@GetMapping("")
+//	public List<BoardCategory> getBoardCategories(){
+//		return boardService.fin
 //	}
 	
 	// 관광지 추천 게시글 조회

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.study.springboot.api.request.CreateAndEditMemberRequest;
+import com.study.springboot.api.request.CreateMemberRequest;
 import com.study.springboot.api.request.EditMemberInfo;
 import com.study.springboot.api.request.EditMemberPassword;
 import com.study.springboot.api.response.MemberDetail;
@@ -43,7 +43,7 @@ public class MemberApi {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<String> insertMember(
-			@RequestBody CreateAndEditMemberRequest request
+			@RequestBody CreateMemberRequest request
 			){
 		try {
 			memberService.insertMember(request);
@@ -75,7 +75,7 @@ public class MemberApi {
 	@PutMapping("/member/{id}")
 	public void editMember(
 			@PathVariable(name="id") String id,
-			@RequestBody CreateAndEditMemberRequest request
+			@RequestBody CreateMemberRequest request
 			) {
 		memberService.editMember(id, request);
 	}

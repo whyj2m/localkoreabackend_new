@@ -3,10 +3,9 @@ package com.study.springboot.service;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.study.springboot.api.request.CreateAndEditMemberRequest;
+import com.study.springboot.api.request.CreateMemberRequest;
 import com.study.springboot.api.request.EditMemberInfo;
 import com.study.springboot.api.request.EditMemberPassword;
 import com.study.springboot.api.response.MemberDetail;
@@ -14,7 +13,6 @@ import com.study.springboot.api.response.MemberList;
 import com.study.springboot.entity.Member;
 import com.study.springboot.repository.MemberRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,7 +21,7 @@ public class MemberService {
 	
 	private final MemberRepository memberRepository;
 	
-	public Member insertMember(CreateAndEditMemberRequest request) {
+	public Member insertMember(CreateMemberRequest request) {
 		Member member = Member.builder()
 							.id(request.getId())
 							.email(request.getEmail())
@@ -66,7 +64,7 @@ public class MemberService {
 									.build();
 	}
 	
-	public void editMember(String id, CreateAndEditMemberRequest request) {
+	public void editMember(String id, CreateMemberRequest request) {
 		Member member = memberRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("존재하지 않는 id입니다."));
 		member.changeMemberDetail(request.getPassword(), request.getName(), request.getPhoneNum());

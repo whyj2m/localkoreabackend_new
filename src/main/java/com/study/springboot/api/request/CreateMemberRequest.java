@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateAndEditMemberRequest {
+public class CreateMemberRequest {
 	private String id;
     private String email;
     private String password;
