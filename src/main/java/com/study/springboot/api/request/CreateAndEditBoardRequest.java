@@ -1,6 +1,7 @@
 package com.study.springboot.api.request;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import com.study.springboot.entity.Member;
 
@@ -23,6 +24,7 @@ public class CreateAndEditBoardRequest {
 	private Member id;
 	private Long boardCno; // 카테고리 번호
 	private Long locationCno; // 지역 카테고리 번호
-	private String location;
+	private String location; // 지역 이름
+	
 
 }

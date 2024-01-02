@@ -4,30 +4,16 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.study.springboot.api.request.CreateAndEditBoardRequest;
-import com.study.springboot.api.request.CreateAndEditLocalFestivalRequest;
-import com.study.springboot.api.request.CreateAndEditLocalFoodsRequest;
-import com.study.springboot.api.request.CreateAndEditMemberRequest;
-import com.study.springboot.api.response.BoardDetail;
 import com.study.springboot.api.response.BoardList;
-import com.study.springboot.api.response.LocalFestivalsDetail;
-import com.study.springboot.api.response.LocalFestivalsList;
-import com.study.springboot.api.response.LocalFoodsDetail;
-import com.study.springboot.api.response.LocalFoodsList;
-import com.study.springboot.api.response.MemberDetail;
-import com.study.springboot.api.response.MemberList;
 import com.study.springboot.entity.Board;
-import com.study.springboot.entity.LocalFestivals;
-import com.study.springboot.entity.LocalFoods;
-import com.study.springboot.entity.Member;
 import com.study.springboot.entity.category.BoardCategory;
+import com.study.springboot.entity.category.LocationCategory;
+import com.study.springboot.repository.BoardCategoryRepository;
 import com.study.springboot.repository.BoardRepository;
-import com.study.springboot.repository.LocalFestivalsRepository;
-import com.study.springboot.repository.LocalFoodsRepository;
-import com.study.springboot.repository.MemberRepository;
+import com.study.springboot.repository.LocationCategoryRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +22,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BoardService {
 
-	@Autowired
-	private BoardRepository boardRepository;
+	private final BoardRepository boardRepository;
+	private final BoardCategoryRepository boardCategoryRepository;
+	private final LocationCategoryRepository locationCategoryRepository;
 	
 	// 게시글 전체 조회
 //	public List<BoardList> findAllBoard(){
@@ -101,23 +88,28 @@ public class BoardService {
 	                    .location(board.getLocation())
 	                    .build())
 	            .collect(Collectors.toList());
-		}
+		}	
 	
 	// 글 작성
 	public Board insertBoard(CreateAndEditBoardRequest request) {
-		Board board = Board.builder()
-							.title(request.getTitle())
-							.content(request.getContent())
-//							.viewCnt(request.getViewCnt())
-							.regDate(ZonedDateTime.now())
-							.updateDate(ZonedDateTime.now())
-//							.cno(request.getLocationCno())
-		                    .location(request.getLocation())
-							.build();
-		boardRepository.save(board);
-		
-		return board;
+		 BoardCategory boardCategory = boardCategoryRepository.findById(request.getBoardCno()).orElse(null);
+		 LocationCategory locationCategory = locationCategoryRepository.findById(request.getLocationCno()).orElse(null);
+
+	     Board board = Board.builder()
+	        .title(request.getTitle())
+	        .content(request.getContent())
+	        // .viewCnt(request.getViewCnt())
+	        .regDate(ZonedDateTime.now())
+	        .updateDate(ZonedDateTime.now())
+	        .cno(boardCategory) // BoardCategory 객체를 넣어줘야 함
+	        .locno(locationCategory) // LocationCategory 객체를 넣어줘야 함
+	        .location(request.getLocation())
+	        .build();
+	    boardRepository.save(board);
+
+	    return board;
 	}
+
 		
 		
 		

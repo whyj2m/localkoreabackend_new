@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 
 import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.entity.category.LocationCategory;
+import com.study.springboot.entity.category.PlaceCategory;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
