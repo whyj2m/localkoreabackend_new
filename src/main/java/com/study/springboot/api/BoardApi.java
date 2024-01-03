@@ -92,7 +92,7 @@ public class BoardApi {
 		boardService.deleteBoard(bno);
 	}	
 	
-	
+	//
 //	@GetMapping("/board/{bno}")
 //	public BoardDetail getBoard(
 //			@PathVariable(name = "bno") Long bno
