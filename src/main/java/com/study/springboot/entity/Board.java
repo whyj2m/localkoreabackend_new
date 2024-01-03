@@ -5,7 +5,6 @@ import java.time.ZonedDateTime;
 
 import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.entity.category.LocationCategory;
-import com.study.springboot.entity.category.PlaceCategory;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -57,9 +56,11 @@ public class Board {
 	private LocationCategory locno; // 지역 카테고리
 	private String location;
 	
-	public void changeBoard(String title, String content) {
+	public void changeBoard(String title, String content, BoardCategory boardCategory, LocationCategory locationCategory) {
 		this.title = title;
 		this.content = content;
+		this.cno = boardCategory;
+		this.locno = locationCategory;
 		this.updateDate = ZonedDateTime.now();
 	}
 

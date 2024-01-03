@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,14 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.study.springboot.api.request.CreateAndEditBoardRequest;
-import com.study.springboot.api.request.CreateAndEditLocationRequest;
 import com.study.springboot.api.response.BoardDetail;
 import com.study.springboot.api.response.BoardList;
-import com.study.springboot.api.response.LocationDetail;
-import com.study.springboot.api.response.LocationList;
-import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.service.BoardService;
-import com.study.springboot.service.LocationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,18 +42,28 @@ public class BoardApi {
 	
 	// 관광지 추천 게시글 조회
 	@GetMapping("/board/tourisSpot")
+	@CrossOrigin
 	public List<BoardList> getBoardList(){
 		return boardService.findByTourisSpot();
 	}
 	
+	// 관광지 추천 bno별 상세 조회
+	@GetMapping("/board/tourisSpot/{bno}")
+	@CrossOrigin
+	public BoardDetail getBoardDetail(@PathVariable Long bno) {
+		return boardService.findByBno(bno);
+	}
+	
 	// 여행메이트 게시글 조회
 	@GetMapping("/board/company")
+	@CrossOrigin
 	public List<BoardList> getCompanyList(){
 		return boardService.findByCompany();
 	}
 
 	// 게시글 작성
 	@PostMapping("/board/boardWrite")
+	@CrossOrigin
 	public ResponseEntity<String> inserBoard(
 			@RequestBody CreateAndEditBoardRequest request
 			){
@@ -69,6 +75,22 @@ public class BoardApi {
 		}
 	}
 	
+	// 게시글 수정
+	@PutMapping("/board/edit/{bno}")
+	public void editBoard(
+			@PathVariable(name = "bno") Long bno,
+			@RequestBody CreateAndEditBoardRequest request
+			) {
+		boardService.editBoard(bno, request);
+	}
+	
+	// 글 삭제
+	@DeleteMapping("/board/delete/{bno}")
+	public void deleteBoard(
+			@PathVariable(name = "bno") Long bno
+			) {
+		boardService.deleteBoard(bno);
+	}	
 	
 	
 //	@GetMapping("/board/{bno}")
