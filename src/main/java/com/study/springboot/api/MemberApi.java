@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.study.springboot.api.request.CreateMemberRequest;
@@ -20,16 +22,18 @@ import com.study.springboot.api.request.EditMemberInfo;
 import com.study.springboot.api.request.EditMemberPassword;
 import com.study.springboot.api.response.MemberDetail;
 import com.study.springboot.api.response.MemberList;
+import com.study.springboot.service.MailService;
 import com.study.springboot.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequiredArgsConstructor
 public class MemberApi {
 	
-	@Autowired
-	private MemberService memberService;
+	private final MemberService memberService;
+	private final MailService mailService;
 	
 	@GetMapping("/members")
 	public List<MemberList> getMemberList(){
@@ -56,6 +60,21 @@ public class MemberApi {
 	        // 예외 발생 시 로그 출력
 	        e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+	    }
+	}
+	
+	@CrossOrigin
+	@ResponseBody
+	@PostMapping("/signup/sendMail")
+	public ResponseEntity<String> sendMail(@RequestBody Map<String, String> emailMap) {
+	    String email = emailMap.get("email");
+	    try {
+	        int code = mailService.sendMail(email);
+	        String vc = String.valueOf(code);
+	        return ResponseEntity.ok(vc);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send email");
 	    }
 	}
 
