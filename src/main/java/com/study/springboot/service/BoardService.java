@@ -125,7 +125,7 @@ public class BoardService {
 	        .updateDate(ZonedDateTime.now())
 	        .cno(boardCategory) // BoardCategory 객체를 넣어줘야 함
 	        .locno(locationCategory) // LocationCategory 객체를 넣어줘야 함
-	        .location(request.getLocation())
+//	        .location(request.getLocation())
 	        .build();
 	    boardRepository.save(board);
 
