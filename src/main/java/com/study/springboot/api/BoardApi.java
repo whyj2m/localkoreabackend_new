@@ -77,6 +77,7 @@ public class BoardApi {
 	
 	// 게시글 수정
 	@PutMapping("/board/edit/{bno}")
+	@CrossOrigin
 	public void editBoard(
 			@PathVariable(name = "bno") Long bno,
 			@RequestBody CreateAndEditBoardRequest request
@@ -86,6 +87,7 @@ public class BoardApi {
 	
 	// 글 삭제
 	@DeleteMapping("/board/delete/{bno}")
+	@CrossOrigin
 	public void deleteBoard(
 			@PathVariable(name = "bno") Long bno
 			) {
