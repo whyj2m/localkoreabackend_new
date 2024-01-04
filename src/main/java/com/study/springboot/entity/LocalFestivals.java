@@ -37,12 +37,12 @@ public class LocalFestivals {
     private String location;
     private String content;
     private String schedule;
-    private String viewCnt;
+    private Long viewCnt;
     @ManyToOne
 	@JoinColumn(name="local_no", referencedColumnName = "localNo")
     private Location localNo;
 	
-	public void changeFestivalDetail(String name, String location, String content, String schedule, String viewCnt) {
+	public void changeFestivalDetail(String name, String location, String content, String schedule, Long viewCnt) {
 		this.name = name;
 		this.location = location;
 		this.content = content;
@@ -50,4 +50,10 @@ public class LocalFestivals {
 		this.viewCnt = viewCnt;
 	}
 
+	public void increaseViewCnt() {
+	    if (this.viewCnt == null) {
+	        this.viewCnt = 0L;
+	    }
+	    this.viewCnt++;
+	}
 }
