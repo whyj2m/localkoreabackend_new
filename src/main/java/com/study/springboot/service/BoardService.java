@@ -7,14 +7,19 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.study.springboot.api.request.CreateAndEditBoardRequest;
+import com.study.springboot.api.response.BoardDetail;
 import com.study.springboot.api.response.BoardList;
+import com.study.springboot.api.response.LocalPlacesList;
 import com.study.springboot.entity.Board;
+import com.study.springboot.entity.LocalPlaces;
+import com.study.springboot.entity.Location;
 import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.entity.category.LocationCategory;
 import com.study.springboot.repository.BoardCategoryRepository;
 import com.study.springboot.repository.BoardRepository;
 import com.study.springboot.repository.LocationCategoryRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -57,14 +62,31 @@ public class BoardService {
 	                    .title(board.getTitle())
 	                    .content(board.getContent())
 	                    .viewCnt(board.getViewCnt())
-	                    .regDate(ZonedDateTime.now())
-	                    .updateDate(ZonedDateTime.now())	            
+	                    .regDate(board.getRegDate())
+	                    .updateDate(board.getUpdateDate())	            
 	                    .boardCno(board.getCno().getCno())
 	                    .locationCno(board.getLocno().getLocno())
 	                    .location(board.getLocation())
 	                    .build())
 	            .collect(Collectors.toList());
 	}
+	
+	// bno별 상세 조회
+	@Transactional
+	public BoardDetail findByBno(Long bno) {
+	    Board board = boardRepository.findByBno(bno).orElseThrow(() -> new EntityNotFoundException("Board not found with bno: " + bno));
+	    
+	    return BoardDetail.builder()
+	            .bno(board.getBno())
+	            .title(board.getTitle())
+	            .content(board.getContent())
+	            .viewCnt(board.getViewCnt())
+	            .regDate(board.getRegDate())
+	            .updateDate(board.getUpdateDate())
+	            .id(board.getId())
+	            .build();
+	}
+
 	
 	// 여행메이트 게시글 조회
 	public List<BoardList> findByCompany() {
@@ -81,8 +103,8 @@ public class BoardService {
 	                    .title(board.getTitle())
 	                    .content(board.getContent())
 	                    .viewCnt(board.getViewCnt())
-	                    .regDate(ZonedDateTime.now())
-	                    .updateDate(ZonedDateTime.now())	            
+	                    .regDate(board.getRegDate())
+	                    .updateDate(board.getUpdateDate())	               
 	                    .boardCno(board.getCno().getCno())
 	                    .locationCno(board.getLocno().getLocno())
 	                    .location(board.getLocation())
@@ -110,9 +132,26 @@ public class BoardService {
 	    return board;
 	}
 
+	// 글 수정
+	public void editBoard(Long bno, CreateAndEditBoardRequest request) {
+		Board board = boardRepository.findById(bno)
+				.orElseThrow(() -> new RuntimeException("Known bno"));
 		
+	    BoardCategory boardCategory = boardCategoryRepository.findById(request.getBoardCno())
+	            .orElseThrow(() -> new RuntimeException("Known cno"));
+
+	    LocationCategory locationCategory = locationCategoryRepository.findById(request.getLocationCno())
+	            .orElseThrow(() -> new RuntimeException("Known lcno"));
+	    
+		board.changeBoard(request.getTitle(), request.getContent(), boardCategory, locationCategory);
+		boardRepository.save(board);
+	}
 		
-		
+	// 글 삭제
+	public void deleteBoard(Long bno) {
+		Board board = boardRepository.findById(bno).orElseThrow();
+		boardRepository.delete(board);
+	}
 		
 //	
 //	
