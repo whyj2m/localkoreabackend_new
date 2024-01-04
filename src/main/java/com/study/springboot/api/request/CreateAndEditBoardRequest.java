@@ -24,7 +24,7 @@ public class CreateAndEditBoardRequest {
 	private Member id;
 	private Long boardCno; // 카테고리 번호
 	private Long locationCno; // 지역 카테고리 번호
-	private String location; // 지역 이름
+//	private String location; // 지역 이름
 	
 
 }
