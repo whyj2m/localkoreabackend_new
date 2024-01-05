@@ -34,6 +34,14 @@ dependencies {
 	
 	// email 인증
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	
+	//security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'com.auth0:java-jwt:4.2.0'
+
+    //jjwt
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
 }
 
 tasks.named('test') {
