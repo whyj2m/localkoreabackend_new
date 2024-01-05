@@ -7,8 +7,10 @@ import com.study.springboot.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class BoardDetail {
@@ -16,7 +18,7 @@ public class BoardDetail {
 	private Long bno;
 	private String title;
     private String content;
-    private String viewCnt;
+    private Long viewCnt;
     private ZonedDateTime regDate; 
 	private ZonedDateTime updateDate; 
 	private Member id;
