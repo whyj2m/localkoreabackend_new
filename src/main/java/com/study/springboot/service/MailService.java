@@ -13,7 +13,7 @@ import lombok.extern.log4j.Log4j2;
 public class MailService {
 	private final JavaMailSender javaMailSender;
 	private static final String sender = "localkorea20s@gmail.com";
-	private static int code;
+	private int code;
 	
 	public int createCode() {
 		code = (int)(Math.random() * (9000)) + 1000;
@@ -48,6 +48,10 @@ public class MailService {
 		MimeMessage message = createMail(email);
 		javaMailSender.send(message);
 		log.info(email);
+		return code;
+	}
+
+	public int getSavedCode() {
 		return code;
 	}
 }

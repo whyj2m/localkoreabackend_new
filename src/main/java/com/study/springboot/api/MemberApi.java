@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.study.springboot.api.request.CreateMemberRequest;
 import com.study.springboot.api.request.EditMemberInfo;
 import com.study.springboot.api.request.EditMemberPassword;
+import com.study.springboot.api.request.LoginRequest;
 import com.study.springboot.api.response.MemberDetail;
 import com.study.springboot.api.response.MemberList;
 import com.study.springboot.service.MailService;
@@ -28,6 +29,7 @@ import com.study.springboot.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @RestController
 @RequiredArgsConstructor
 public class MemberApi {
@@ -77,6 +79,23 @@ public class MemberApi {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send email");
 	    }
 	}
+	
+	@CrossOrigin
+	@PostMapping("/signup/verifyCode")
+	public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> verificationCodeMap) {
+        String enteredCode = verificationCodeMap.get("verificationCode");
+        int savedCode = mailService.getSavedCode(); // 메일로 발송된 코드
+        String mailCode = String.valueOf(savedCode);
+        if (enteredCode.equals(mailCode)) {
+        	log.info("Entered Code: {}", enteredCode);
+        	log.info("Saved Code: {}", mailCode);
+            // 인증 성공
+            return ResponseEntity.ok("인증 성공");
+        } else {
+            // 인증 실패
+            return ResponseEntity.badRequest().body("인증 실패");
+        }
+    }
 
 	@CrossOrigin
 	@PostMapping("/signup")
@@ -92,6 +111,12 @@ public class MemberApi {
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error" + e.getMessage());
 	    }
+	}
+	
+	@CrossOrigin
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+		return memberService.login(request);
 	}
 	
 	@PutMapping("/mypage/{id}/editInfo")
@@ -110,15 +135,6 @@ public class MemberApi {
 			) {
 		memberService.editMemberPw(id, request);
 		return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
-	}
-	
-	
-	@PutMapping("/member/{id}")
-	public void editMember(
-			@PathVariable(name="id") String id,
-			@RequestBody CreateMemberRequest request
-			) {
-		memberService.editMember(id, request);
 	}
 	
 	@DeleteMapping("/member/{id}")

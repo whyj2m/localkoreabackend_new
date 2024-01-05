@@ -18,10 +18,10 @@ public class BoardList {
 	private Long bno; // 게시글 번호
 	private String title; // 제목
     private String content; // 내용
-    private String viewCnt; // 조회수
+    private Long viewCnt; // 조회수
     private ZonedDateTime regDate; // 작성일시
 	private ZonedDateTime updateDate; // 수정일시
-	private Member id; // id
+	private Member id; // 회원 id
 	private Long boardCno; // 카테고리 번호
 	private Long locationCno; // 지역 카테고리 번호
 	private String location;

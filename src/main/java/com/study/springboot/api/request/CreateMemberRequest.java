@@ -17,5 +17,6 @@ public class CreateMemberRequest {
     private String phoneNum;
     private ZonedDateTime signUpAt; // 회원 가입 일시 
 	private ZonedDateTime updatedAt; // 회원 정보 수정 일시
-	private boolean admin;
+	private String role;
+	private String authProvider;
 }
