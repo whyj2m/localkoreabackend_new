@@ -26,6 +26,7 @@ import com.study.springboot.api.response.MemberList;
 import com.study.springboot.service.MailService;
 import com.study.springboot.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -40,6 +41,13 @@ public class MemberApi {
 	@GetMapping("/members")
 	public List<MemberList> getMemberList(){
 		return memberService.findAllMembers();
+	}
+	
+	@GetMapping("/members/{id}")
+	public MemberDetail getMemberDetail(
+			@PathVariable(name="id") String id
+			) {
+		return memberService.findById(id);
 	}
 	
 	@GetMapping("/mypage/{id}")
@@ -135,6 +143,13 @@ public class MemberApi {
 			) {
 		memberService.editMemberPw(id, request);
 		return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+	}
+	
+	@CrossOrigin
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(HttpServletRequest request) {
+		memberService.logout();
+		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping("/member/{id}")
