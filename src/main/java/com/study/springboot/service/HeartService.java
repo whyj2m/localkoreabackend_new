@@ -45,6 +45,18 @@ public class HeartService {
 	}
 	
 	@Transactional
+	public List<HeartDetail> findHeartsByUserId(String memberId) {
+	    List<Heart> hearts = heartRepository.findById_Id(memberId);
+	    return hearts.stream()
+	            .map(heart -> HeartDetail.builder()
+	                    .heartNo(heart.getHeartNo())
+	                    .id(heart.getId())
+	                    .placeNo(heart.getPlaceNo())
+	                    .build())
+	            .toList();
+	}
+	
+	@Transactional
 	public HeartDetail findById(Long heartNo) {
 		Heart hearts = heartRepository.findById(heartNo).orElseThrow();
 		
