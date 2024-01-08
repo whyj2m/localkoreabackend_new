@@ -1,5 +1,7 @@
 package com.study.springboot.api;
 
+import org.springframework.http.MediaType;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,6 +25,7 @@ import com.study.springboot.api.request.CreateAndEditBoardRequest;
 import com.study.springboot.api.response.BoardDetail;
 import com.study.springboot.api.response.BoardList;
 import com.study.springboot.entity.Board;
+import com.study.springboot.entity.FileData;
 import com.study.springboot.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -71,6 +74,19 @@ public class BoardApi {
 		return boardService.findByBno(bno);
 	}
 	
+	// bno별 이미지 조회	
+	@GetMapping("/api/images/{bno}")
+    public ResponseEntity<List<FileData>> getImagesByBno(@PathVariable Long bno) {
+        List<FileData> fileDataList = boardService.getFileDataByBno(bno);
+
+        if (fileDataList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(fileDataList, HttpStatus.OK);
+    }
+	
+	
 	// 여행메이트 게시글 조회
 	@GetMapping("/board/company")
 	@CrossOrigin
@@ -79,7 +95,6 @@ public class BoardApi {
 	}
 
 	// 게시글 작성
-
 	@PostMapping("/board/boardWrite")
 	@CrossOrigin
 	public ResponseEntity<String> insertBoardWithFile(
@@ -100,14 +115,48 @@ public class BoardApi {
 
 	        Board board = boardService.insertBoard(request, files); // 게시글과 파일들을 함께 처리
 
-	        return ResponseEntity.ok("파일 업로드 성공");
+	        return ResponseEntity.ok("백엔드 파일 업로드 성공");
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error" + e.getMessage());
 	    }
 	}
+//	@PostMapping(value = "/board/boardWrite", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	@PostMapping(value = "/board/boardWrite", consumes = "multipart/form-data")
+//	@CrossOrigin
+//	public ResponseEntity<String> insertBoardWithFile(@RequestBody CreateAndEditBoardRequest request,
+//	        @RequestPart("files") List<MultipartFile> files) {
+//	    try {
+//	        Board board = boardService.insertBoard(request, files); // 게시글과 파일들을 함께 처리
+//
+//	        return ResponseEntity.ok("파일 업로드 성공");
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error" + e.getMessage());
+//	    }
+//	}
 
-	
+
+
+
+
+
+//	@PostMapping("/board/boardWrite")
+//	@CrossOrigin
+//	public ResponseEntity<String> insertBoardWithFile(@RequestPart("boardData") CreateAndEditBoardRequest boardData) {
+//	    try {
+//	        List<MultipartFile> files = boardData.getFiles();
+//
+//	        Board board = boardService.insertBoard(boardData, files); // 게시글과 파일들을 함께 처리
+//
+//	        return ResponseEntity.ok("파일 업로드 성공");
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error" + e.getMessage());
+//	    }
+//	}
+
+
 	
 	
 	

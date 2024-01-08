@@ -40,6 +40,11 @@ public class HeartApi {
 		return heartService.findAllHearts();
 	}
 	
+	@GetMapping("/hearts/{memberid}")
+	public List<HeartDetail> getHeartsByUserId(@PathVariable(name = "memberid") String memberId) {
+	    return heartService.findHeartsByUserId(memberId);
+	}
+	
 	@GetMapping("/heart/{heartNo}")
 	public HeartDetail getHeart(
 			@PathVariable(name = "heartNo") Long heartNo
