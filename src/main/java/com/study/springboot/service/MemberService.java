@@ -63,7 +63,16 @@ public class MemberService {
 			
 			// 로그인 성공 및 JWT 토큰반환
 			LoginResponse response = new LoginResponse("Login successful!", token, member.getId());
+			
+			// 로그아웃 구분을 위한 redis 저장
+			
 			return ResponseEntity.ok(response);
+			
+		} else if (member != null && !bCryptPasswordEncoder.matches(request.getPassword(), member.getPassword())) {
+			// 비밀번호 불일치
+			LoginResponse response = new LoginResponse("Incorrect password.");
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+			
 		} else { // 로그인 실패
 			LoginResponse response = new LoginResponse("Login failed.");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -122,6 +131,11 @@ public class MemberService {
 				.orElseThrow(() -> new RuntimeException("존재하지 않는 id입니다."));
 		member.changeMemberPassword(request.getPassword());
 		memberRepository.save(member);
+	}
+
+	public void logout() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

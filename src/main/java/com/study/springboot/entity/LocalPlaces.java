@@ -60,5 +60,10 @@ public class LocalPlaces {
 	    }
 	    this.viewCnt++;
 	}
+	
+	  // 추가된 생성자
+    public LocalPlaces(Long placeNo) {
+        this.placeNo = placeNo;
+    }
 
 }
