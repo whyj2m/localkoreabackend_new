@@ -24,7 +24,7 @@ public class TokenProvider {
         return makeToken(new Date(now.getTime() + expiredAt.toMillis()), member);
     }
 
-    //토큰 생성 메소스
+    //토큰 생성
     private String makeToken(Date expiry, Member member) {
         Date now = new Date();
 
@@ -35,7 +35,7 @@ public class TokenProvider {
                 .setExpiration(expiry)
                 .setSubject(member.getEmail())
                 .claim("email", member.getEmail())
-                .claim("name", member.getUsername())
+                .claim("id", member.getUsername())
                 .claim("role", member.getRole())
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
@@ -52,7 +52,7 @@ public class TokenProvider {
             return claims.getSubject();
         } catch (JwtException e) {
             // 토큰이 유효하지 않은 경우 예외 처리
-            throw new JwtException("토큰이 맞지 않아요");
+            throw e;
         }
     }
 
@@ -63,4 +63,20 @@ public class TokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
     }
+    
+    public String createRefreshJwt(String id, String jwtSecret, Long refreshExpired) {
+    	Claims claims = Jwts.claims();
+    	claims.put("id", id);
+    	
+    	return Jwts.builder()
+    			.setClaims(claims)
+    			.setIssuedAt(new Date(System.currentTimeMillis()))
+    			.setExpiration(new Date(System.currentTimeMillis()+refreshExpired))
+    			.signWith(SignatureAlgorithm.HS256, jwtSecret)
+    			.compact();
+    }
+    
+//    public Date getExpired(String token, String jwtSecret) {
+//    	
+//    }
 }

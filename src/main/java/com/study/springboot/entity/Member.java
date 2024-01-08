@@ -40,12 +40,27 @@ public class Member implements UserDetails{
 	private String role;
 	private String authProvider;
 	
+	@Builder
+	public Member(String id, String email, String password, String name, String authProvider) {
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.authProvider = authProvider;
+	}
+	
 	public void changeMemberDetail(String email, String name, String phoneNum) {
 		this.email = email;
 		this.name = name;
 		this.phoneNum = phoneNum;
 		this.updatedAt = ZonedDateTime.now();
 	}
+	
+	public Member update(String name, String email) {
+        this.name = name;
+        this.email = email;
+        return this;
+    }
 	
 	public void changeMemberPassword(String password) {
 		this.password = password;
@@ -90,6 +105,4 @@ public class Member implements UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
-
-	
 }
