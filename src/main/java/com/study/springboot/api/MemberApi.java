@@ -42,6 +42,12 @@ public class MemberApi {
 		return memberService.findAllMembers();
 	}
 	
+	@GetMapping("/members/{id}")
+	public MemberDetail getMemberDetail(
+			@PathVariable(name="id") String id
+			) {
+		return memberService.findById(id);
+	}
 	@GetMapping("/mypage/{id}")
 	public MemberDetail getMember(
 			@PathVariable(name="id") String id

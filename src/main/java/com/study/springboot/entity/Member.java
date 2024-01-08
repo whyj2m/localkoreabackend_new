@@ -66,6 +66,10 @@ public class Member implements UserDetails{
     public String getPassword() {
         return password;
     }
+	 // 추가된 생성자 Heart Post 할때 id값 불러오는거.
+    public Member(String id) {
+        this.id = id;
+    }
 
 	@Override // 계정 만료 여부 반환 (true : 만료X)
 	public boolean isAccountNonExpired() {
