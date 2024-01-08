@@ -3,6 +3,7 @@ package com.study.springboot.service;
 import java.io.File;
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,7 +80,7 @@ public class BoardService {
 	            .collect(Collectors.toList());
 	}
 	
-	// bno별 상세 조회
+//	// bno별 관광지 추천 상세 조회
 	@Transactional
 	public BoardDetail findByBno(Long bno) {
 	    Board board = boardRepository.findByBno(bno).orElseThrow(() -> new EntityNotFoundException("없는 글번호 입니다.: " + bno));
@@ -92,10 +93,43 @@ public class BoardService {
 	            .regDate(board.getRegDate())
 	            .updateDate(board.getUpdateDate())
 	            .id(board.getId())
+                .locationCno(board.getLocno().getLocno())
+                .location(board.getLocation())
 	            .build();
 	}
 
+	// bno별 이미지조회
+	public List<FileData> getFileDataByBno(Long bno) {
+        return fileDataRepository.findByBoardBno(bno);
+    }
 	
+	
+//	@Transactional
+//	public BoardDetail findByBno(Long bno) {
+//	    Board board = boardRepository.findByBno(bno)
+//	            .orElseThrow(() -> new EntityNotFoundException("없는 글번호 입니다.: " + bno));
+//
+//	    List<FileData> files = fileDataRepository.findByBoardBno(bno); // 변경된 부분
+//
+//	    return BoardDetail.builder()
+//	            .bno(board.getBno())
+//	            .title(board.getTitle())
+//	            .content(board.getContent())
+//	            .viewCnt(board.getViewCnt())
+//	            .regDate(board.getRegDate())
+//	            .updateDate(board.getUpdateDate())
+//	            .id(board.getId())
+//	            .locationCno(board.getLocno().getLocno())
+//	            .location(board.getLocation())
+//	            .files(files)
+//	            .build();
+//	}
+
+
+
+	
+
+
 	// 여행메이트 게시글 조회
 	public List<BoardList> findByCompany() {
 	    // BoardCategory 객체 생성 및 초기화
@@ -131,7 +165,6 @@ public class BoardService {
 	            .title(request.getTitle())
 	            .content(request.getContent())
 	            .regDate(ZonedDateTime.now())
-	            
 	            .updateDate(ZonedDateTime.now())
 	            .cno(boardCategory)
 	            .locno(locationCategory)
@@ -141,9 +174,20 @@ public class BoardService {
 	    
 	    log.info("글작성은 됩니다");
 	    
+	    
+	    Long bno = board.getBno();
+	    
+	    // bno에 해당하는 폴더 경로 생성
+	    String folderPath = FOLDER_PATH + bno + File.separator; // images/bno/
+	    File folder = new File(folderPath);
+	    
+	    if (!folder.exists()) {
+	        folder.mkdirs(); // 폴더 생성
+	    }
+	    
 	    // 파일 업로드
 	    for (MultipartFile file : files) {
-	        String filePath = FOLDER_PATH + file.getOriginalFilename();
+	        String filePath = folderPath  + file.getOriginalFilename();
 	        FileData fileData = fileDataRepository.save(
 	                FileData.builder()
 	                        .uuid(file.getOriginalFilename())
@@ -174,10 +218,40 @@ public class BoardService {
 	}
 		
 	// 글 삭제
+//	public void deleteBoard(Long bno) {
+//		Board board = boardRepository.findById(bno).orElseThrow();
+//		boardRepository.delete(board);
+//	}
+	
+	// 글 삭제
 	public void deleteBoard(Long bno) {
-		Board board = boardRepository.findById(bno).orElseThrow();
-		boardRepository.delete(board);
+	    Board board = boardRepository.findById(bno).orElseThrow();
+
+	    // 게시글에 첨부된 파일을 가져와 삭제
+	    List<FileData> attachments = fileDataRepository.findByBoardBno(board.getBno());
+
+	    if (attachments != null && !attachments.isEmpty()) {
+	        for (FileData attachment : attachments) {
+	            // 첨부 파일 삭제
+	            deleteAttachment(attachment);
+	        }
+	    }
+
+	    boardRepository.delete(board);
 	}
+
+	// 첨부 파일 삭제 메서드
+	private void deleteAttachment(FileData attachment) {
+	    // 파일 시스템에서 파일 삭제
+	    File file = new File(attachment.getFilePath());
+	    if (file.exists()) {
+	        file.delete();
+	    }
+	    // DB에서 첨부 파일 삭제
+	    fileDataRepository.delete(attachment);
+	}
+
+
 		
 	// 조회수
 	public void viewCount(Long bno) {
