@@ -22,10 +22,12 @@ public class CreateAndEditBoardRequest {
 	
 	private String title;
     private String content;
-    private String viewCnt;
+//    private String viewCnt;
     private ZonedDateTime regDate; 
 	private ZonedDateTime updateDate; 
+//	private String id;
 	private Member id;
+	private Member userName;
 	private Long boardCno; // 카테고리 번호
 	private Long locationCno; // 지역 카테고리 번호
 	private String location; // 지역 이름
