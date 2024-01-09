@@ -12,6 +12,7 @@ import com.study.springboot.entity.LocalPlaces;
 import com.study.springboot.entity.Location;
 import com.study.springboot.repository.LocalPlacesRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -56,6 +57,24 @@ public class LocalPlaceService {
 							).toList();
 		
 	}
+	
+	 @Transactional
+	    public LocalPlacesDetail findLocalPlaceDetailsByPlaceNo(Long placeNo) {
+	        LocalPlaces localPlace = placesRepository.findById(placeNo).orElseThrow(EntityNotFoundException::new);
+
+	        // 검색한 정보로 LocalPlacesDetail 객체를 만들어 반환합니다.
+	        return LocalPlacesDetail.builder()
+	                .placeNo(localPlace.getPlaceNo())
+	                .name(localPlace.getName())
+	                .location(localPlace.getLocation())
+	                .content(localPlace.getContent())
+	                .longitude(localPlace.getLongitude())
+	                .latitude(localPlace.getLatitude())
+	                .viewCnt(localPlace.getViewCnt())
+	                .heartCnt(localPlace.getHeartCnt())
+	                .localNo(localPlace.getLocalNo())
+	                .build();
+	    }
 	
 	@Transactional
 	public LocalPlacesDetail findById(Long placeNo) {
@@ -118,4 +137,15 @@ public class LocalPlaceService {
 	    // 변경 사항을 저장
 	     placesRepository.save(place);
 	}
+	
+	@Transactional
+    public void increaseHeartCount(Long placeNo) {
+        LocalPlaces place = placesRepository.findById(placeNo)
+                .orElseThrow(() -> new RuntimeException("장소를 찾을 수 없습니다."));
+
+        // 좋아요 수 증가
+        place.increaseHeartCnt();
+        // 변경 사항을 저장
+        placesRepository.save(place);
+    }
 }

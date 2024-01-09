@@ -52,6 +52,11 @@ public class HeartApi {
 		return heartService.findById(heartNo);
 	}
 	
+	@GetMapping("/hearts/details/{memberid}")
+    public List<HeartDetail> getHeartDetailsByUserId(@PathVariable(name = "memberid") String memberId) {
+        return heartService.findHeartDetailsByUserId(memberId);
+    }
+	
 	@PostMapping("/heart")
 	public ResponseEntity<String> inserHeart(
 			@RequestBody CreateAndEditHeartRequest request

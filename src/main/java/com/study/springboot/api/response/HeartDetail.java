@@ -14,6 +14,7 @@ public class HeartDetail {
 	
 	private Long heartNo;
 	private Member id;
-	private LocalPlaces placeNo;
+	private Long placeNo;
+	 private LocalPlacesDetail localPlacesDetail;  // 추가
 
 }

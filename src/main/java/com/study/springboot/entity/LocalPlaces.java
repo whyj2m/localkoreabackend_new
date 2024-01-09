@@ -60,10 +60,14 @@ public class LocalPlaces {
 	    }
 	    this.viewCnt++;
 	}
-	
+    public void increaseHeartCnt() {
+        if (this.heartCnt == null) {
+            this.heartCnt = 0L;
+        }
+        this.heartCnt++;
+    }
 	  // 추가된 생성자
     public LocalPlaces(Long placeNo) {
         this.placeNo = placeNo;
     }
-
 }

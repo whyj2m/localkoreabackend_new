@@ -2,6 +2,7 @@ package com.study.springboot.api;
 
 import org.springframework.http.MediaType;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -75,16 +76,28 @@ public class BoardApi {
 	}
 	
 	// bno별 이미지 조회	
+//	@GetMapping("/api/images/{bno}")
+//    public ResponseEntity<List<FileData>> getImagesByBno(@PathVariable Long bno) {
+//        List<FileData> fileDataList = boardService.getFileDataByBno(bno);
+//
+//        if (fileDataList.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//
+//        return new ResponseEntity<>(fileDataList, HttpStatus.OK);
+//    }
 	@GetMapping("/api/images/{bno}")
-    public ResponseEntity<List<FileData>> getImagesByBno(@PathVariable Long bno) {
-        List<FileData> fileDataList = boardService.getFileDataByBno(bno);
-
-        if (fileDataList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(fileDataList, HttpStatus.OK);
-    }
+	@CrossOrigin
+	public ResponseEntity<?> downImage(@PathVariable("bno") Long bno) throws IOException{
+		byte[] downloadImage = boardService.downloadImgeSystem(bno);
+		if(downloadImage != null) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.contentType(MediaType.valueOf("image/png"))
+					.body(downloadImage);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+	}
 	
 	
 	// 여행메이트 게시글 조회
