@@ -14,6 +14,6 @@ public class HeartList {
 	
 	private Long heartNo;
 	private Member id;
-	private LocalPlaces placeNo;
+	private Long placeNo;
 
 }
