@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateAndEditHeartRequest {
-	
 	private Member id;
-	private LocalPlaces placeNo;
+	private Long placeNo;
 
 }

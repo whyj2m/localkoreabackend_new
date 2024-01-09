@@ -33,9 +33,9 @@ public class Heart {
 	@ManyToOne
 	@JoinColumn(name="member_id", referencedColumnName = "id")
 	private Member id;
-	@ManyToOne
-	@JoinColumn(name="place_no", referencedColumnName = "placeNo")
-	private LocalPlaces placeNo;
+//	@ManyToOne
+//	@JoinColumn(name="place_no", referencedColumnName = "placeNo")
+	private Long placeNo;
 	
 //	public void changeHeart(String name, String content, String poplation, String area) {
 //		this.name = name;
