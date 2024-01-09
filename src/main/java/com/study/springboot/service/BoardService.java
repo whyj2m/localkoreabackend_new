@@ -2,6 +2,7 @@ package com.study.springboot.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,10 +100,20 @@ public class BoardService {
 	}
 
 	// bno별 이미지조회
-	public List<FileData> getFileDataByBno(Long bno) {
-        return fileDataRepository.findByBoardBno(bno);
-    }
-	
+	public byte[] downloadImgeSystem(Long boardBno) throws IOException {
+	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
+	    
+	    if (fileDataList.isEmpty()) {
+	        throw new RuntimeException("FileData not found for board bno: " + boardBno);
+	    }
+	    
+	    FileData fileData = fileDataList.get(0); // Or determine the appropriate fileData in the list
+	    
+	    String filePath = fileData.getFilePath();
+	    
+	    return Files.readAllBytes(new File(filePath).toPath());
+	}
+
 	
 //	@Transactional
 //	public BoardDetail findByBno(Long bno) {
