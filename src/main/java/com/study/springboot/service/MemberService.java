@@ -126,10 +126,12 @@ public class MemberService {
 		memberRepository.save(member);
 	}
 
+	// 비밀번호 변경
 	public void editMemberPw(String id, EditMemberPassword request) {
 		Member member = memberRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("존재하지 않는 id입니다."));
-		member.changeMemberPassword(request.getPassword());
+		String newPw = bCryptPasswordEncoder.encode(request.getPassword());
+		member.changeMemberPassword(newPw);
 		memberRepository.save(member);
 	}
 
