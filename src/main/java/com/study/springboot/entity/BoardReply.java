@@ -44,5 +44,10 @@ public class BoardReply {
 	@ManyToOne
 	@JoinColumn(name="board_bno", referencedColumnName = "bno")
 	private Board bno;
+	
+	
+	public void setBoard(Board bno) {
+	    this.bno = bno;
+	}
 
 }
