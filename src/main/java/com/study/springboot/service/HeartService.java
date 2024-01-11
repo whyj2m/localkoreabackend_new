@@ -2,6 +2,7 @@ package com.study.springboot.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import com.study.springboot.api.response.LocalPlacesDetail;
 import com.study.springboot.entity.Heart;
 import com.study.springboot.entity.LocalPlaces;
 import com.study.springboot.repository.HeartRepository;
-import com.study.springboot.repository.LocalPlacesRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -76,6 +76,13 @@ public class HeartService {
 
 	    return heartDetails;
 	}
+	// 체크 하트클릭
+	@Transactional
+	public boolean checkIfHearted(String memberId, Long placeNo) {
+        // 해당 아이디와 placeNo에 대한 로직을 구현하여 확인
+        // 예시로, 임의의 로직을 구현
+        return heartRepository.existsById_IdAndPlaceNo(memberId, placeNo);
+    }
 	@Transactional
 	public List<HeartDetail> findHeartsByUserId(String memberId) {
 	    List<Heart> hearts = heartRepository.findById_Id(memberId);
@@ -109,9 +116,18 @@ public class HeartService {
 //	}
 	
 	@Transactional
-	public void deleteHeart(Long heartNo) {
-		Heart heart = heartRepository.findById(heartNo).orElseThrow();
-		heartRepository.delete(heart);
-	}
+	public void deleteHeartByMemberIdAndPlaceNo(String memberId, Long placeNo) {
+	    Optional<Heart> heartOptional = heartRepository.findById_IdAndPlaceNo(memberId, placeNo);
 
+	    if (heartOptional.isPresent()) {
+	        Heart heart = heartOptional.get();
+	        Long localPlaces = heart.getPlaceNo();
+
+	        if (localPlaces != null) {
+	            localPlaceService.decreaseHeartCount(localPlaces); // localPlaceService를 주입받아 사용
+	        }
+
+	        heartRepository.delete(heart);
+	    }
+	}
 }

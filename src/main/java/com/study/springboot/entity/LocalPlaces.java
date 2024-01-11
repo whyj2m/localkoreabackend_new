@@ -70,4 +70,12 @@ public class LocalPlaces {
     public LocalPlaces(Long placeNo) {
         this.placeNo = placeNo;
     }
+    public void decreaseHeartCnt() {
+        if (this.heartCnt == null || this.heartCnt <= 0) {
+            this.heartCnt = 0L;
+        } else {
+            this.heartCnt--;
+        }
+    }
+
 }
