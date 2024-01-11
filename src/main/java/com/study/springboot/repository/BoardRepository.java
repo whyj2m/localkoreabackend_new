@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.entity.category.LocationCategory;
 import com.study.springboot.entity.Board;
+import com.study.springboot.entity.BoardReply;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long>{
@@ -23,6 +24,5 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
 
 	// bno로 단일 조회
 	  Optional<Board> findByBno(Long bno);
-	 
 
 }
