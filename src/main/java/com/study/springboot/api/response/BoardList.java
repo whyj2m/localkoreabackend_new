@@ -2,6 +2,7 @@ package com.study.springboot.api.response;
 
 import java.time.ZonedDateTime;
 
+import com.study.springboot.entity.Board;
 import com.study.springboot.entity.Member;
 
 import lombok.AllArgsConstructor;
