@@ -30,6 +30,7 @@ import com.study.springboot.api.response.BoardList;
 import com.study.springboot.entity.Board;
 import com.study.springboot.entity.BoardReply;
 import com.study.springboot.entity.FileData;
+import com.study.springboot.entity.Member;
 import com.study.springboot.repository.FileDataRepository;
 import com.study.springboot.service.BoardService;
 
@@ -150,6 +151,7 @@ public class BoardApi {
 	        @RequestParam(value = "boardCno") Long boardCno,
 	        @RequestParam(value = "locationCno") Long locationCno,
 	        @RequestParam(value = "location") String location,
+	        @RequestParam(value = "id")String id,
 	        @RequestParam(required = false) List<MultipartFile> files // 수정된 부분
 	) {
 	    try {
@@ -160,7 +162,7 @@ public class BoardApi {
 	        request.setLocationCno(locationCno);
 	        request.setLocation(location);
 
-	        Board board = boardService.insertBoard(request, files); // 게시글과 파일들을 함께 처리
+	        Board board = boardService.insertBoard(request, id, files); // 게시글과 파일들을 함께 처리
 
 	        return ResponseEntity.ok("백엔드) 파일 업로드 성공");
 	    } catch (Exception e) {
