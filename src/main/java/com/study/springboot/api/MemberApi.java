@@ -136,6 +136,18 @@ public class MemberApi {
 		return ResponseEntity.ok("회원정보가 성공적으로 수정되었습니다.");
 	}
 	
+	@PostMapping("/mypage/{id}/checkPw")
+	public ResponseEntity<Boolean> checkPasswordMatch(
+	        @PathVariable(name="id") String id,
+	        @RequestBody Map<String, String> passwordMap
+	) {
+	    String currentPassword = passwordMap.get("currentPassword");
+	    log.info(currentPassword);
+	    boolean isMatch = memberService.checkPasswordMatch(id, currentPassword);
+	    log.info(isMatch);
+	    return ResponseEntity.ok(isMatch);
+	}
+	
 	@PutMapping("/mypage/{id}/editPw")
 	public ResponseEntity<String> editPw(
 			@PathVariable(name="id") String id,
