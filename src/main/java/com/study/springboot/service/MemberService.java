@@ -125,6 +125,13 @@ public class MemberService {
 		member.changeMemberDetail(request.getEmail(), request.getName(), request.getPhoneNum());
 		memberRepository.save(member);
 	}
+	
+	// 기존 비밀번호 확인
+	public boolean checkPasswordMatch(String id, String currentPassword) {
+	    Member member = memberRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("존재하지 않는 id입니다."));
+	    return bCryptPasswordEncoder.matches(currentPassword, member.getPassword());
+	}
 
 	// 비밀번호 변경
 	public void editMemberPw(String id, EditMemberPassword request) {
