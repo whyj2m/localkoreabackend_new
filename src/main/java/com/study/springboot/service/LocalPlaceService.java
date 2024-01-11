@@ -148,4 +148,16 @@ public class LocalPlaceService {
         // 변경 사항을 저장
         placesRepository.save(place);
     }
+	
+	@Transactional
+	public void decreaseHeartCount(Long placeNo) {
+	    LocalPlaces place = placesRepository.findById(placeNo)
+	            .orElseThrow(() -> new RuntimeException("장소를 찾을 수 없습니다."));
+
+	    // 하트 수 감소
+	    place.decreaseHeartCnt();
+	    // 변경 사항을 저장
+	    placesRepository.save(place);
+	}
+
 }

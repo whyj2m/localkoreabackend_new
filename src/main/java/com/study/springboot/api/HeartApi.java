@@ -45,6 +45,18 @@ public class HeartApi {
 	    return heartService.findHeartsByUserId(memberId);
 	}
 	
+	 @GetMapping("/heart/check/{memberid}/{placeno}")
+	    public ResponseEntity<Boolean> checkIfHearted(
+	            @PathVariable(name = "memberid") String memberId,
+	            @PathVariable(name = "placeno") Long placeNo
+	    ) {
+	        try {
+	            boolean isHearted = heartService.checkIfHearted(memberId, placeNo);
+	            return ResponseEntity.ok(isHearted);
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+	        }
+	    }
 	@GetMapping("/heart/{heartNo}")
 	public HeartDetail getHeart(
 			@PathVariable(name = "heartNo") Long heartNo
@@ -77,10 +89,16 @@ public class HeartApi {
 //		heartService.editHeart(heartNo, request);
 //	}
 	
-	@DeleteMapping("/heart/{heartNo}")
-	public void deleteBoard(
-			@PathVariable(name = "heartNo") Long heartNo
-			) {
-		heartService.deleteHeart(heartNo);
-	}
+	 @DeleteMapping("/hearts/{memberid}/{placeno}")
+	    public ResponseEntity<String> deleteHeart(
+	            @PathVariable(name = "memberid") String memberId,
+	            @PathVariable(name = "placeno") Long placeNo
+	    ) {
+	        try {
+	            heartService.deleteHeartByMemberIdAndPlaceNo(memberId, placeNo);
+	            return ResponseEntity.ok("Heart deleted successfully");
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error: " + e.getMessage());
+	        }
+	    }
 }
