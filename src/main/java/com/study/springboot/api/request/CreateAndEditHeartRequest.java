@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 public class CreateAndEditHeartRequest {
 	private Member id;
 	private Long placeNo;
+	private String memberId;
 
 }

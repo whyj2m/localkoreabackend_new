@@ -37,11 +37,5 @@ public class Heart {
 //	@JoinColumn(name="place_no", referencedColumnName = "placeNo")
 	private Long placeNo;
 	
-//	public void changeHeart(String name, String content, String poplation, String area) {
-//		this.name = name;
-//		this.content = content;
-//		this.poplation = poplation;
-//		this.area = area;
-//	}
-	
+
 }

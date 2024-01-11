@@ -30,11 +30,13 @@ public class MailService {
 			message.setSubject("새하마노 방방곡곡 회원가입 이메일 인증 요청");
 			String body = "";
 			body += "<h2>새하마노 방방곡곡</h2>";
-			body += "<div style='margin:0 auto; border='1px solid #d9d9d9'>";
-			body += "<h1>회원가입 인증 메일</h1>";
+			body += "<div style='margin:0 auto; border:1px solid #d9d9d9;'>";
+			body += "<h1 style='text-align:center; font-weight:bold; margin: 10px'>회원가입 인증 메일</h1>";
+			body += "<div style='margin:0 auto; background-color: #d9d9d9; width:80%; text-align:center; padding: 20px'>";
 			body += "<p>본 이메일 인증은 새하마노 방방곡곡 회원가입을 위한 필수 사항입니다.</p>";
 			body += "<p>아래 인증번호를 해당 입력란에 정확히 기입해주시길 바랍니다.</p>";
-			body += "<h2>"+code+"</h2>";
+			body += "</div>";
+			body += "<h2 style='text-align:center; font-weight:bold'>"+code+"</h2>";
 			body += "</div>";
 			message.setText(body, "utf-8", "html");
 		} catch (Exception e) {
