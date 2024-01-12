@@ -23,6 +23,7 @@ import com.study.springboot.api.response.BoardList;
 import com.study.springboot.entity.Board;
 import com.study.springboot.entity.BoardReply;
 import com.study.springboot.entity.FileData;
+import com.study.springboot.entity.Member;
 import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.entity.category.LocationCategory;
 import com.study.springboot.repository.BoardCategoryRepository;
@@ -30,6 +31,7 @@ import com.study.springboot.repository.BoardReplyRepository;
 import com.study.springboot.repository.BoardRepository;
 import com.study.springboot.repository.FileDataRepository;
 import com.study.springboot.repository.LocationCategoryRepository;
+import com.study.springboot.repository.MemberRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -45,6 +47,7 @@ public class BoardService {
 	private final BoardCategoryRepository boardCategoryRepository;
 	private final LocationCategoryRepository locationCategoryRepository;
 	private final BoardReplyRepository boardReplyRepository;
+	private final MemberRepository memberRepository;
 	
 	 // 파일업로드
     private final String FOLDER_PATH = "c:\\images\\";
@@ -163,7 +166,7 @@ public class BoardService {
 		}	
 	
 	
-	// 여형메이트 bno별 상세조회 
+	// 여형메이트 bno별 상세조회
 	@Transactional
 	public BoardDetail getCompanyDetail(Long bno) {
 	    Board board = boardRepository.findByBno(bno).orElseThrow(() -> new EntityNotFoundException("없는 글번호 입니다.: " + bno));
@@ -186,6 +189,7 @@ public class BoardService {
 	
 	// 글 작성
 	public Board insertBoard(CreateAndEditBoardRequest request, 
+			@RequestParam(value = "id") String id, // id 파라미터를 통해 member가져오기
 	        @RequestParam(required = false) List<MultipartFile> files) throws IOException {
 	    log.info("insert");
 	    BoardCategory boardCategory = boardCategoryRepository.findById(request.getBoardCno()).orElse(null);
@@ -199,6 +203,8 @@ public class BoardService {
 	        files = new ArrayList<>(); // 파일 리스트를 빈 리스트로 설정
 	    }
 	    
+	    Member member = memberRepository.findById(id).orElse(null); // 멤버에서 id
+
 	    Board board = Board.builder()
 	            .title(request.getTitle())
 	            .content(request.getContent())
@@ -207,6 +213,7 @@ public class BoardService {
 	            .cno(boardCategory)
 	            .locno(locationCategory)
 	            .location(request.getLocation())
+	            .id(member)
 	            .build();
 	    boardRepository.save(board);
 	    
