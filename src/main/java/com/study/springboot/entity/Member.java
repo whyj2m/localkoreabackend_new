@@ -40,15 +40,6 @@ public class Member implements UserDetails{
 	private String role;
 	private String authProvider;
 	
-	@Builder
-	public Member(String id, String email, String password, String name, String authProvider) {
-		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.name = name;
-		this.authProvider = authProvider;
-	}
-	
 	public void changeMemberDetail(String email, String name, String phoneNum) {
 		this.email = email;
 		this.name = name;
