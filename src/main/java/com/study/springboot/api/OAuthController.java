@@ -2,15 +2,24 @@ package com.study.springboot.api;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.study.springboot.service.OAuthService;
 
 @RestController
 @RequestMapping("/oauth")
 public class OAuthController {
+	@Autowired
+	private OAuthService oAuthService;
+	
 	@GetMapping("loginInfo")
 	public String oauthLoginInfo(Authentication authentication) {
 		if (authentication == null || authentication.getPrincipal() == null) {
@@ -21,4 +30,5 @@ public class OAuthController {
 		Map<String, Object> attributes = oAuth2User.getAttributes();
 		return attributes.toString();
 	}
+
 }
