@@ -10,6 +10,7 @@ import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.entity.category.LocationCategory;
 import com.study.springboot.entity.Board;
 import com.study.springboot.entity.BoardReply;
+import com.study.springboot.entity.Member;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long>{
@@ -25,4 +26,9 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
     // bno로 단일 조회
       Optional<Board> findByBno(Long bno);
 
+      /**
+       * @author bhy98 백혜윤
+       * 작성자 id로 게시글 조회
+       */
+      public List<Board> findByCnoAndId(BoardCategory category, Member member);
 }

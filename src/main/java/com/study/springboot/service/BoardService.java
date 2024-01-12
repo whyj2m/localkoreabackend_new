@@ -401,4 +401,57 @@ public class BoardService {
 //		boardRepository.delete(board);
 //	}
 
+	/**
+     * @author bhy98 백혜윤
+     * 작성자 id로 게시글 조회 - 관광지 추천
+     */
+	@Transactional
+	public List<BoardList> tourSpotFindById(String userId) {
+		Member member = memberRepository.findById(userId)
+				.orElseThrow(()->new EntityNotFoundException("해당 ID의 회원을 찾을 수 없습니다: " + userId));
+		BoardCategory category = boardCategoryRepository.findByCname("관광지 추천");
+		List<Board> boards = boardRepository.findByCnoAndId(category, member);
+		
+		return boards.stream()
+				.map(board -> BoardList.builder()
+						.bno(board.getBno())
+						.title(board.getTitle())
+						.content(board.getContent())
+						.viewCnt(board.getViewCnt())
+						.regDate(board.getRegDate())
+						.updateDate(board.getUpdateDate())
+						.id(board.getId())
+						.boardCno(board.getCno().getCno())
+						.locationCno(board.getLocno().getLocno())
+						.location(board.getLocation())
+						.build()
+						).collect(Collectors.toList());
+	}
+
+	/**
+     * @author bhy98 백혜윤
+     * 작성자 id로 게시글 조회 - 여행 메이트
+     */
+	@Transactional
+	public List<BoardList> travelmateFindById(String userId) {
+		Member member = memberRepository.findById(userId)
+				.orElseThrow(()->new EntityNotFoundException("해당 ID의 회원을 찾을 수 없습니다: " + userId));
+		BoardCategory category = boardCategoryRepository.findByCname("여행 메이트");
+		List<Board> boards = boardRepository.findByCnoAndId(category, member);
+		
+		return boards.stream()
+				.map(board -> BoardList.builder()
+						.bno(board.getBno())
+						.title(board.getTitle())
+						.content(board.getContent())
+						.viewCnt(board.getViewCnt())
+						.regDate(board.getRegDate())
+						.updateDate(board.getUpdateDate())
+						.id(board.getId())
+						.boardCno(board.getCno().getCno())
+						.locationCno(board.getLocno().getLocno())
+						.location(board.getLocation())
+						.build()
+						).collect(Collectors.toList());
+	}
 }
