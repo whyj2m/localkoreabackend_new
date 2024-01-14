@@ -13,5 +13,4 @@ public interface FileDataRepository extends JpaRepository<FileData, String>{
 	List<FileData> findByBoardBno(Long boardBno);
 	List<FileData> findByUuid(String uuid);
 	
-	
 }
