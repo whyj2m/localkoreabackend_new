@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +28,7 @@ public class FileData {
     private String uuid; // uuid
     private String origin; // 원본파일
     private String filePath; // 저장파일
+    @Column(name = "board_bno")
     private Long boardBno; // 게시글번호
 
     @Builder
