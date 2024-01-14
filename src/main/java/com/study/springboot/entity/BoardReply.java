@@ -32,8 +32,8 @@ import lombok.Setter;
 @Table(name = "BoardReply")
 @Entity
 public class BoardReply {
-	
-	@Id
+
+    @Id
     @SequenceGenerator (
             name = "boardReplySequence",
             sequenceName = "BoardReply_SEQ",
@@ -42,23 +42,23 @@ public class BoardReply {
     )
     @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = "boardReplySequence")
     private Long rno;
-	private String content;
-	private ZonedDateTime regDate; 
-	@ManyToOne
-	@JoinColumn(name="member_id", referencedColumnName = "id")
-	private Member id;
-//	private Board bno;
+    private String content;
+    private ZonedDateTime regDate; 
+    @ManyToOne
+    @JoinColumn(name="member_id", referencedColumnName = "id")
+    private Member id;
+//    private Board bno;
 
-//	@ManyToOne
-//	@JoinColumn(name = "board_bno", referencedColumnName = "bno")
-//	private Board board;
+//    @ManyToOne
+//    @JoinColumn(name = "board_bno", referencedColumnName = "bno")
+//    private Board board;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_bno") // board_bno는 Board 엔티티의 bno와 매핑됩니다.
     private Board board;
-    
-//	 public Long getBoardBno() {
-//	        return this.board.getBno();
-//	    }
+
+//     public Long getBoardBno() {
+//            return this.board.getBno();
+//        }
 
 }
