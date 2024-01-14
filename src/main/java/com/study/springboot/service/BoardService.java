@@ -1,12 +1,16 @@
 package com.study.springboot.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -14,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -97,23 +102,10 @@ public class BoardService {
 	            .build();
 	}
 
-	// bno별 이미지조회
-//	public byte[] downloadImgeSystem(Long boardBno) throws IOException {
-//	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
-//	    
-//	    if (fileDataList.isEmpty()) {
-//	        throw new RuntimeException("FileData not found for board bno: " + boardBno);
-//	    }
-//	    
-//	    FileData fileData = fileDataList.get(0); // Or determine the appropriate fileData in the list
-//	    
-//	    String filePath = fileData.getFilePath();
-//	    
-//	    return Files.readAllBytes(new File(filePath).toPath());
-//	}
+	
+	
 	
 	// bno별 이미지조회
-
 	public byte[] downloadImageSystem(Long boardBno) {
 	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
 
@@ -132,13 +124,39 @@ public class BoardService {
 	        return null;
 	    }
 	}
+	
 
+	// 오 리스트로불러와짐1
+//	public List<FileData> findByBoardBno(Long boardBno) {
+//	    return fileDataRepository.findByBoardBno(boardBno);
+//	}
 
-	
-	
-	
-	
-	
+	// 오 리스트로불러와짐2
+//	public List<FileData> findByBoardBno(Long boardBno) {
+//	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
+//	    return fileDataList;
+//	}
+
+//	// 파일 업로드
+//	public String uploadImageSystem(MultipartFile file) throws IOException{
+//		String filePath = FOLDER_PATH + file.getOriginalFilename();
+//		FileData fileData = fileDataRepository.save(
+//				FileData.builder()
+////				.name(file.getOriginalFilename())
+////				.type(file.getContentType())
+//				.filePath(filePath)
+//				.origin(filePath)
+//				.uuid(filePath)
+//				.build()
+//				);
+//		file.transferTo(new File(filePath));
+//		
+//		if(filePath !=null) { // filePath가 있으면
+//			return "파일업로드 성공" + filePath;
+//		}
+//		return null;
+//	}
+//	
 
 	// 여행메이트 게시글 조회
 	public List<BoardList> findByCompany() {
@@ -183,10 +201,7 @@ public class BoardService {
                 .location(board.getLocation())
 	            .build();
 	}
-	
-	
-	
-	
+
 	// 글 작성
 	public Board insertBoard(CreateAndEditBoardRequest request, 
 			@RequestParam(value = "id") String id, // id 파라미터를 통해 member가져오기
@@ -296,20 +311,39 @@ public class BoardService {
 	}
 
 	// 댓글 작성
+//	@Transactional
+//	public void BoardReply(Long bno, String content) {
+//	    Board board = boardRepository.findByBno(bno)
+//	            .orElseThrow(() -> new EntityNotFoundException("해당 bno의 게시글을 찾을 수 없습니다: " + bno));
+//
+//	    BoardReply reply = BoardReply.builder()
+//	            .content(content)
+//	            .regDate(ZonedDateTime.now())
+//	            .build();
+//
+//	    reply.setBoard(board); // 댓글에 해당하는 게시글 설정
+//
+//	    boardReplyRepository.save(reply);
+//	}
 	@Transactional
-	public void BoardReply(Long bno, String content) {
+	public void BoardReply(Long bno, String content, Member member) {
 	    Board board = boardRepository.findByBno(bno)
 	            .orElseThrow(() -> new EntityNotFoundException("해당 bno의 게시글을 찾을 수 없습니다: " + bno));
 
+	    // Member member = memberRepository.findById(id).orElse(null); // 멤버에서 id
+	    
 	    BoardReply reply = BoardReply.builder()
 	            .content(content)
 	            .regDate(ZonedDateTime.now())
+	            .id(member)
 	            .build();
 
 	    reply.setBoard(board); // 댓글에 해당하는 게시글 설정
 
 	    boardReplyRepository.save(reply);
 	}
+
+
 
 	// 댓글조회
 //	@Transactional
@@ -324,6 +358,28 @@ public class BoardService {
 //	            .map(reply -> new Object[]{ reply.getRno(), reply.getId(), reply.getContent(), reply.getRegDate()})
 //	            .collect(Collectors.toList());
 //	}
+	// 댓글조회
+	@Transactional
+	public List<Map<String, Object>> findReply(Long bno) {
+	    List<BoardReply> replies = boardReplyRepository.findByBoard_Bno(bno);
+
+	    if (replies.isEmpty()) {
+	        throw new EntityNotFoundException("해당 번호의 댓글이 없습니다.: " + bno);
+	    }
+
+	    return replies.stream()
+	            .map(reply -> {
+	                Map<String, Object> replyMap = new HashMap<>();
+	                replyMap.put("rno", reply.getRno());
+	                replyMap.put("id", reply.getId() != null ? reply.getId().getId() : null);
+	                replyMap.put("email", reply.getId().getEmail());
+	                replyMap.put("content", reply.getContent());
+	                replyMap.put("regDate", reply.getRegDate());
+	                return replyMap;
+	            })
+	            .collect(Collectors.toList());
+	}
+
 
 	
 //	@Transactional
@@ -411,7 +467,7 @@ public class BoardService {
 				.orElseThrow(()->new EntityNotFoundException("해당 ID의 회원을 찾을 수 없습니다: " + userId));
 		BoardCategory category = boardCategoryRepository.findByCname("관광지 추천");
 		List<Board> boards = boardRepository.findByCnoAndId(category, member);
-		
+
 		return boards.stream()
 				.map(board -> BoardList.builder()
 						.bno(board.getBno())
@@ -438,7 +494,7 @@ public class BoardService {
 				.orElseThrow(()->new EntityNotFoundException("해당 ID의 회원을 찾을 수 없습니다: " + userId));
 		BoardCategory category = boardCategoryRepository.findByCname("여행 메이트");
 		List<Board> boards = boardRepository.findByCnoAndId(category, member);
-		
+
 		return boards.stream()
 				.map(board -> BoardList.builder()
 						.bno(board.getBno())
