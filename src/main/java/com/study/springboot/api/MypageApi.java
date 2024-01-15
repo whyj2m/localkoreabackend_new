@@ -1,6 +1,7 @@
 package com.study.springboot.api;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.study.springboot.api.response.BoardList;
+import com.study.springboot.entity.BoardReply;
 import com.study.springboot.service.BoardService;
 import com.study.springboot.service.MemberService;
 
@@ -39,5 +41,14 @@ public class MypageApi {
 		List<BoardList> travelmateList = boardService.travelmateFindById(userId);
 		
 		return travelmateList;
+	}
+	
+	
+	// 나의 활동 - 댓글
+	@CrossOrigin
+	@GetMapping("/mypage/replylist/{userId}")
+	public List<Map<String, Object>> myReplyList(@PathVariable String userId) {
+		List<Map<String, Object>> replyList = boardService.replyFindById(userId);
+		return replyList;
 	}
 }
