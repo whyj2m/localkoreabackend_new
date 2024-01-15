@@ -25,6 +25,7 @@ import com.study.springboot.api.request.CreateReplyRequest;
 import com.study.springboot.api.response.BoardDetail;
 import com.study.springboot.api.response.BoardList;
 import com.study.springboot.entity.Board;
+import com.study.springboot.entity.FileData;
 import com.study.springboot.entity.Member;
 import com.study.springboot.repository.MemberRepository;
 import com.study.springboot.service.BoardService;
@@ -45,21 +46,44 @@ public class BoardApi {
 		return boardService.findByTourisSpot();
 	}
 	
+//	// 관광지 추천 bno별 상세 조회
+//	@GetMapping("/board/tourisSpot/{bno}")
+//	@CrossOrigin
+//	public BoardDetail getBoardDetail(@PathVariable Long bno) {
+//		
+//		BoardDetail board = boardService.findByBno(bno);
+//		
+//		boardService.viewCount(bno); // 조회수 1씩 증가
+//		
+//		if(board.getViewCnt() == null) {  // viewCnt가 null이면 0으로 설정
+//			board.setViewCnt(0L);
+//		}
+//		
+//		return boardService.findByBno(bno);
+//	}
+	
 	// 관광지 추천 bno별 상세 조회
 	@GetMapping("/board/tourisSpot/{bno}")
 	@CrossOrigin
 	public BoardDetail getBoardDetail(@PathVariable Long bno) {
-		
-		BoardDetail board = boardService.findByBno(bno);
-		
-		boardService.viewCount(bno); // 조회수 1씩 증가
-		
-		if(board.getViewCnt() == null) {  // viewCnt가 null이면 0으로 설정
-			board.setViewCnt(0L);
-		}
-		
-		return boardService.findByBno(bno);
+	    BoardDetail board = boardService.findByBno(bno);
+
+	    boardService.viewCount(bno);
+
+	    if (board.getViewCnt() == null) {
+	        board.setViewCnt(0L);
+	    }
+
+	    // 이미지 정보를 가져와서 BoardDetail에 추가
+	    List<FileData> imageInfo = boardService.findByBoardBno(bno);
+	    board.setImageInfo(imageInfo);
+
+	    return board;
 	}
+	
+	
+	
+	
 	
 	// 여행메이트 bno별 상세 조회 test
 	@GetMapping("/board/companyView/{bno}")
@@ -183,7 +207,7 @@ public class BoardApi {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
-
+	
 	// 이미지 여러개 (실패)
 //	@GetMapping("/api/images/{bno}")
 //	@CrossOrigin
@@ -196,4 +220,8 @@ public class BoardApi {
 //	        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 //	    }
 //	}
+
+
+	
+	
 }

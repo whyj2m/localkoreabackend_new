@@ -7,11 +7,8 @@ import java.nio.file.Paths;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +19,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "Board_attach")
 public class FileData {
 
-//    @GeneratedValue(strategy = GenerationType.AUTO, generator = "fileData_seq")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private String uuid; // uuid
     private String origin; // 원본파일
@@ -41,11 +36,27 @@ public class FileData {
     }
     
  // FileData에서 filePath를 이용하여 파일을 읽어오는 메서드
+//    public byte[] readFileData(FileData fileData) throws IOException {
+//        String filePath = fileData.getFilePath();
+//        Path path = Paths.get(filePath);
+//        return Files.readAllBytes(path);
+//    }
+    
+    public String getUuid() {
+        return this.uuid;
+    }
+    
+    // FileData에서 filePath를 이용하여 파일을 읽어오는 메서드
     public byte[] readFileData(FileData fileData) throws IOException {
         String filePath = fileData.getFilePath();
+        String uuid = fileData.getUuid(); // uuid 값 가져오기
+
         Path path = Paths.get(filePath);
         return Files.readAllBytes(path);
     }
+
+
+
 }
 
 

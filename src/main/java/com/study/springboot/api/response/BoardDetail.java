@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.study.springboot.entity.Board;
+import com.study.springboot.entity.FileData;
 import com.study.springboot.entity.Member;
 
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class BoardDetail {
 	private Long locationCno; // 지역 카테고리 번호
 	private String location; // 지역 이름
 	private List<MultipartFile> files;
+	private List<FileData> imageInfo; // 이미지 정보 
 	  
 	@Getter
 	@Builder
@@ -47,6 +49,10 @@ public class BoardDetail {
     public static class AnotherNestedClass {
         private String nestedField;
     }
+	
+	 public void setImageInfo(List<FileData> imageInfo) {
+	        this.imageInfo = imageInfo;
+	    }
 	
 
 }
