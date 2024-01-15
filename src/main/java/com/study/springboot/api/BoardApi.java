@@ -46,22 +46,6 @@ public class BoardApi {
 		return boardService.findByTourisSpot();
 	}
 	
-//	// 관광지 추천 bno별 상세 조회
-//	@GetMapping("/board/tourisSpot/{bno}")
-//	@CrossOrigin
-//	public BoardDetail getBoardDetail(@PathVariable Long bno) {
-//		
-//		BoardDetail board = boardService.findByBno(bno);
-//		
-//		boardService.viewCount(bno); // 조회수 1씩 증가
-//		
-//		if(board.getViewCnt() == null) {  // viewCnt가 null이면 0으로 설정
-//			board.setViewCnt(0L);
-//		}
-//		
-//		return boardService.findByBno(bno);
-//	}
-	
 	// 관광지 추천 bno별 상세 조회
 	@GetMapping("/board/tourisSpot/{bno}")
 	@CrossOrigin
@@ -81,11 +65,7 @@ public class BoardApi {
 	    return board;
 	}
 	
-	
-	
-	
-	
-	// 여행메이트 bno별 상세 조회 test
+	// 여행메이트 bno별 상세 조회
 	@GetMapping("/board/companyView/{bno}")
 	@CrossOrigin
 	public BoardDetail getCompanyDetail(@PathVariable Long bno) {
@@ -157,7 +137,7 @@ public class BoardApi {
 		boardService.deleteBoard(bno);
 	}	
 	
-	// 댓글작성
+	// 댓글 작성
 	@PostMapping("/board/companyView/reply")
 	@CrossOrigin
 	public ResponseEntity<String> insertReply(@RequestBody CreateReplyRequest request){
@@ -220,8 +200,4 @@ public class BoardApi {
 //	        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 //	    }
 //	}
-
-
-	
-	
 }

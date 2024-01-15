@@ -22,20 +22,14 @@ public class CreateAndEditBoardRequest {
 	
 	private String title;
     private String content;
-//    private String viewCnt;
     private ZonedDateTime regDate; 
 	private ZonedDateTime updateDate; 
-//	private String id;
 	private Member id;
 	private Member userName;
 	private Long boardCno; // 카테고리 번호
 	private Long locationCno; // 지역 카테고리 번호
 	private String location; // 지역 이름
-//	private String filePath; // 파일업로드
-//	private String uuid; // 파일 uuid
 
-//	List<fileUpload> postFile
-// 	
 	private List<MultipartFile> files; // 첨부파일 
 	
 }
