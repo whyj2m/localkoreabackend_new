@@ -1,8 +1,6 @@
 package com.study.springboot.service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,14 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -101,9 +94,6 @@ public class BoardService {
                 .location(board.getLocation())
 	            .build();
 	}
-
-	
-	
 	
 	// bno별 이미지조회
 	public byte[] downloadImageSystem(Long boardBno) {
@@ -192,10 +182,8 @@ public class BoardService {
 	    return BoardDetail.builder()
 	            .bno(board.getBno())
 	            .title(board.getTitle())
-//	            .content(board.getContent())
 	            .viewCnt(board.getViewCnt())
 	            .regDate(board.getRegDate())
-//	            .updateDate(board.getUpdateDate())
 	            .id(board.getId())
                 .locationCno(board.getLocno().getLocno())
                 .location(board.getLocation())
@@ -311,20 +299,6 @@ public class BoardService {
 	}
 
 	// 댓글 작성
-//	@Transactional
-//	public void BoardReply(Long bno, String content) {
-//	    Board board = boardRepository.findByBno(bno)
-//	            .orElseThrow(() -> new EntityNotFoundException("해당 bno의 게시글을 찾을 수 없습니다: " + bno));
-//
-//	    BoardReply reply = BoardReply.builder()
-//	            .content(content)
-//	            .regDate(ZonedDateTime.now())
-//	            .build();
-//
-//	    reply.setBoard(board); // 댓글에 해당하는 게시글 설정
-//
-//	    boardReplyRepository.save(reply);
-//	}
 	@Transactional
 	public void BoardReply(Long bno, String content, Member member) {
 	    Board board = boardRepository.findByBno(bno)
@@ -343,25 +317,10 @@ public class BoardService {
 	    boardReplyRepository.save(reply);
 	}
 
-
-
-	// 댓글조회
-//	@Transactional
-//	public List<Object[]> findReply(Long bno) {
-//	    List<BoardReply> replies = boardReplyRepository.findByBoard_Bno(bno);
-//
-//	    if (replies.isEmpty()) {
-//	        throw new EntityNotFoundException("해당 번호의 댓글이 없습니다.: " + bno);
-//	    }
-//
-//	    return replies.stream()
-//	            .map(reply -> new Object[]{ reply.getRno(), reply.getId(), reply.getContent(), reply.getRegDate()})
-//	            .collect(Collectors.toList());
-//	}
 	// 댓글조회
 	@Transactional
 	public List<Map<String, Object>> findReply(Long bno) {
-	    List<BoardReply> replies = boardReplyRepository.findByBoard_Bno(bno);
+	    List<BoardReply> replies = boardReplyRepository.findByBoardBno(bno);
 
 	    if (replies.isEmpty()) {
 	        throw new EntityNotFoundException("해당 번호의 댓글이 없습니다.: " + bno);
@@ -373,6 +332,7 @@ public class BoardService {
 	                replyMap.put("rno", reply.getRno());
 	                replyMap.put("id", reply.getId() != null ? reply.getId().getId() : null);
 	                replyMap.put("email", reply.getId().getEmail());
+	                replyMap.put("name", reply.getId().getName());
 	                replyMap.put("content", reply.getContent());
 	                replyMap.put("regDate", reply.getRegDate());
 	                return replyMap;
@@ -380,82 +340,10 @@ public class BoardService {
 	            .collect(Collectors.toList());
 	}
 
-
-	
-//	@Transactional
-//	public List<BoardList> findByReply(Long bno) {
-//	    List<BoardReply> replys = boardReplyRepository.findByBno(bno);
-//
-//	    if (replys.isEmpty()) {
-//	        throw new EntityNotFoundException("해당 번호의 댓글이 없습니다.: " + bno);
-//	    }
-//
-//	    return replys.stream()
-//	            .map(reply -> {
-//	                // 댓글 내용을 가져와서 BoardList 객체로 매핑
-//	                return BoardList.builder()
-//	                        .bno(reply.getBoard().getBno()) // 댓글의 boardBno를 사용하여 데이터 추출
-//	                        .content(reply.getContent())
-//	                        .regDate(reply.getRegDate())
-//	                        .id(reply.getId())
-//	                        .build();
-//	            })
-//	            .collect(Collectors.toList());
-//	}
-
-
-
-	
-	
-	
-	
-//	public BoardReply findByReply(Long boardBno) {
-//	    return boardReplyRepository.findByBno(boardBno)
-//	            .orElseThrow(() -> new EntityNotFoundException("없는 글번호 입니다.: " + boardBno));
-//	}
-	
-	
-	
-	
-	
-	
-	
-//	// 댓글 조회
-//	public BoardReply findByReply(Long bno) {	    
-//		 List<BoardReply> replies = boardReplyRepository.findByBno(bno);
-//		    return !replies.isEmpty() ? replies.get(0) : null;
-//	}
-
-//	
-//	
-//	
-//	@Transactional
-//	public BoardDetail findById(Long bno) {
-//		Board board = boardRepository.findById(bno).orElseThrow();
-//		
-//		return BoardDetail.builder()
-//									.title(board.getTitle())
-//									.content(board.getContent())
-//									.viewCnt(board.getViewCnt())
-//									.regDate(ZonedDateTime.now())
-//									.updateDate(ZonedDateTime.now())
-//									.build();
-//	}
-//	
-//	@Transactional
-//	public void editBoard(Long bno, CreateAndEditBoardRequest request) {
-//		Board board = boardRepository.findById(bno)
-//				.orElseThrow(() -> new RuntimeException("Known LocalFood"));
-//		board.changeBoard(request.getTitle(), request.getContent());
-//		boardRepository.save(board);
-//		
-//	}
-//	
-//	@Transactional
-//	public void deleteBoard(Long bno) {
-//		Board board = boardRepository.findById(bno).orElseThrow();
-//		boardRepository.delete(board);
-//	}
+	// 댓글 삭제
+	public void deleteReply(Long rno) {
+	    boardReplyRepository.deleteById(rno);
+	}
 
 	/**
      * @author bhy98 백혜윤
@@ -509,5 +397,29 @@ public class BoardService {
 						.location(board.getLocation())
 						.build()
 						).collect(Collectors.toList());
+	}
+	
+	/**
+	* @author bhy98 백혜윤
+	 * 작성자 id로 댓글 조회
+	*/
+	@Transactional
+	public List<Map<String, Object>> replyFindById(String userId) {
+		Member member = memberRepository.findById(userId)
+				.orElseThrow(()->new EntityNotFoundException("해당 ID의 회원을 찾을 수 없습니다: " + userId));
+		List<BoardReply> replyList = boardReplyRepository.findById(member);
+		
+		return replyList.stream()
+				.map(reply -> {
+					Map<String, Object> replyMap = new HashMap<>();
+					replyMap.put("rno", reply.getRno());
+					replyMap.put("content", reply.getContent());
+					replyMap.put("regDate", reply.getRegDate());
+					replyMap.put("id", reply.getId());
+					replyMap.put("bno", reply.getBoard().getBno());
+					replyMap.put("title", reply.getBoard().getTitle());
+					replyMap.put("location", reply.getBoard().getLocation());
+					return replyMap;
+				}).collect(Collectors.toList());
 	}
 }
