@@ -7,6 +7,5 @@ import com.study.springboot.entity.category.BoardCategory;
 
 @Repository
 public interface BoardCategoryRepository extends JpaRepository<BoardCategory, Long>{
-//	BoardCategory findBoardCategory(String name);
 	BoardCategory findByCname(String cname);
 }

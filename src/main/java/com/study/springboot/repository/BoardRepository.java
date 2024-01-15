@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.entity.category.LocationCategory;
 import com.study.springboot.entity.Board;
-import com.study.springboot.entity.BoardReply;
 import com.study.springboot.entity.Member;
 
 @Repository

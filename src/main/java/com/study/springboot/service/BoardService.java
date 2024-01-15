@@ -117,12 +117,11 @@ public class BoardService {
 	        return null;
 	    }
 	}
-	
 
 	// 이미지 정보
 	public List<FileData> findByBoardBno(Long boardBno) {
 		return fileDataRepository.findByBoardBno(boardBno);
-}
+	}
 	
 	// bno별 이미지조회
 //	public ResponseEntity<byte[]> downloadImageSystem(Long boardBno) {
@@ -339,8 +338,6 @@ public class BoardService {
 	    Board board = boardRepository.findByBno(bno)
 	            .orElseThrow(() -> new EntityNotFoundException("해당 bno의 게시글을 찾을 수 없습니다: " + bno));
 
-	    // Member member = memberRepository.findById(id).orElse(null); // 멤버에서 id
-	    
 	    BoardReply reply = BoardReply.builder()
 	            .content(content)
 	            .regDate(ZonedDateTime.now())
