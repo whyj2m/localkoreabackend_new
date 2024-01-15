@@ -23,6 +23,9 @@ import com.study.springboot.api.request.EditMemberPassword;
 import com.study.springboot.api.request.LoginRequest;
 import com.study.springboot.api.response.MemberDetail;
 import com.study.springboot.api.response.MemberList;
+import com.study.springboot.entity.Member;
+import com.study.springboot.service.FindIdMailService;
+import com.study.springboot.service.FindPwMailService;
 import com.study.springboot.service.MailService;
 import com.study.springboot.service.MemberService;
 
@@ -37,6 +40,8 @@ public class MemberApi {
 	
 	private final MemberService memberService;
 	private final MailService mailService;
+	private final FindIdMailService findIdMailService;
+	private final FindPwMailService findPwMailService;
 	
 	@GetMapping("/members")
 	public List<MemberList> getMemberList(){
@@ -127,6 +132,51 @@ public class MemberApi {
 		return memberService.login(request);
 	}
 	
+	@CrossOrigin
+	@ResponseBody
+	@PostMapping("/sendFindIdMail")
+	public ResponseEntity<String> sendFindIdMail(@RequestBody Map<String, String> inputMap) {
+		String name = inputMap.get("name");
+	    String email = inputMap.get("email");
+	    try {
+	        String id = findIdMailService.findId(email, name);
+	        findIdMailService.sendMail(name, email, id);
+	        return ResponseEntity.ok(id);
+	    } catch (RuntimeException e) {
+	        // 해당 이메일과 이름으로 회원을 찾을 수 없거나 다른 예외가 발생한 경우
+	        if ("해당 이메일과 이름으로 회원을 찾을 수 없습니다.".equals(e.getMessage())) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	        } else {
+	            e.printStackTrace();
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이메일 발송에 실패하였습니다");
+	        }
+	    }
+	}
+	
+	@CrossOrigin
+	@ResponseBody
+	@PostMapping("/sendFindPwMail")
+	public ResponseEntity<String> sendFindPwMail(@RequestBody Map<String, String> inputMap) {
+		String id = inputMap.get("id");
+		String email = inputMap.get("email");
+		try {
+			// 임시 비밀번호 생성 및 메일 발송
+			String tempPw = findPwMailService.sendMail(id, email);
+			// 임시 비밀번호를 이용하여 비밀번호 변경
+			memberService.changeTempPw(id, email, tempPw);
+			return ResponseEntity.ok("임시 비밀번호가 이메일로 발송되었습니다. " + tempPw);
+		} catch (RuntimeException e) {
+			if ("존재하지 않는 id입니다.".equals(e.getMessage())) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+			} else if ("이메일이 일치하지 않습니다.".equals(e.getMessage())) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+	        } else {
+				e.printStackTrace();
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이메일 발송에 실패하였습니다");
+			}
+		}
+	}
+	
 	@PutMapping("/mypage/{id}/editInfo")
 	public ResponseEntity<String> editInfo(
 			@PathVariable(name="id") String id,
@@ -155,13 +205,6 @@ public class MemberApi {
 			) {
 		memberService.editMemberPw(id, request);
 		return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
-	}
-	
-	@CrossOrigin
-	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(HttpServletRequest request) {
-		memberService.logout();
-		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping("/member/{id}")
