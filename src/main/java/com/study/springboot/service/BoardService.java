@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -100,21 +103,53 @@ public class BoardService {
 	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
 
 	    if (fileDataList.isEmpty()) {
-	        return null; // 이미지가 없으면 null 반환
+	        return null;
 	    }
 
-	    FileData fileData = fileDataList.get(0); // Or determine the appropriate fileData in the list
+	    FileData fileData = fileDataList.get(0);
 
 	    String filePath = fileData.getFilePath();
 
 	    try {
 	        return Files.readAllBytes(Paths.get(filePath));
 	    } catch (IOException e) {
-	        e.printStackTrace(); // 에러 처리 필요
+	        e.printStackTrace();
 	        return null;
 	    }
 	}
 	
+
+	// 이미지 정보
+	public List<FileData> findByBoardBno(Long boardBno) {
+		return fileDataRepository.findByBoardBno(boardBno);
+}
+	
+	// bno별 이미지조회
+//	public ResponseEntity<byte[]> downloadImageSystem(Long boardBno) {
+//	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
+//
+//	    if (fileDataList.isEmpty()) {
+//	        return ResponseEntity.notFound().build();
+//	    }
+//
+//	    FileData fileData = fileDataList.get(0);
+//
+//	    String filePath = fileData.getFilePath();
+//	    String uuid = fileData.getUuid();
+//
+//	    try {
+//	        byte[] imageBytes = Files.readAllBytes(Paths.get(filePath));
+//	        HttpHeaders headers = new HttpHeaders();
+//	        headers.add("Content-Type", "image/jpeg"); // 이미지 타입에 맞게 변경
+//	        headers.add("uuid", uuid); // uuid를 응답 헤더에 추가
+//
+//	        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+//	    } catch (IOException e) {
+//	        e.printStackTrace();
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//	    }
+//	}
+
 
 	// 오 리스트로불러와짐1
 //	public List<FileData> findByBoardBno(Long boardBno) {
@@ -421,5 +456,10 @@ public class BoardService {
 					replyMap.put("location", reply.getBoard().getLocation());
 					return replyMap;
 				}).collect(Collectors.toList());
+	}
+
+	public FileData getFileDataByBoardBno(Long bno) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
