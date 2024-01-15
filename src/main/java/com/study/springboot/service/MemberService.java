@@ -30,6 +30,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final TokenProvider tokenProvider;
+	private final FindPwMailService findPwMailService;
 	
 	public Member insertMember(CreateMemberRequest request) {
 		Member member = Member.builder()
@@ -107,13 +108,6 @@ public class MemberService {
 									.build();
 	}
 	
-//	public void editMember(String id, CreateMemberRequest request) {
-//		Member member = memberRepository.findById(id)
-//				.orElseThrow(() -> new RuntimeException("존재하지 않는 id입니다."));
-//		member.changeMemberDetail(request.getPassword(), request.getName(), request.getPhoneNum());
-//		memberRepository.save(member);
-//	}
-	
 	public void deleteMember(String id) {
 		Member member = memberRepository.findById(id).orElseThrow();
 		memberRepository.delete(member);
@@ -142,9 +136,17 @@ public class MemberService {
 		memberRepository.save(member);
 	}
 
-	public void logout() {
-		// TODO Auto-generated method stub
-		
+	// pw 찾기 - 임시 비밀번호로 변경
+	public void changeTempPw(String id, String email, String tempPw) {
+		Member member = memberRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("존재하지 않는 id입니다."));
+		if(!email.equals(member.getEmail())) {
+			throw new RuntimeException("이메일이 일치하지 않습니다.");
+		}
+		// 비밀번호 생성 및 암호화
+		String encodedTempPw = bCryptPasswordEncoder.encode(tempPw);
+		// 임시 비밀번호로 변경
+		member.changeMemberPassword(encodedTempPw);
+		memberRepository.save(member);
 	}
-
 }
