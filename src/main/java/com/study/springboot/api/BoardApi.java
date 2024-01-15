@@ -26,7 +26,6 @@ import com.study.springboot.api.response.BoardDetail;
 import com.study.springboot.api.response.BoardList;
 import com.study.springboot.entity.Board;
 import com.study.springboot.entity.Member;
-import com.study.springboot.repository.FileDataRepository;
 import com.study.springboot.repository.MemberRepository;
 import com.study.springboot.service.BoardService;
 
@@ -135,19 +134,6 @@ public class BoardApi {
 	}	
 	
 	// 댓글작성
-//	@PostMapping("/board/companyView/reply")
-//	@CrossOrigin
-//	public ResponseEntity<String> insertReply(@RequestBody CreateReplyRequest request){
-//		try {
-//			boardService.BoardReply(request.getBno(), request.getContent());
-//			return ResponseEntity.status(HttpStatus.CREATED).body("댓글 작성 성공");
-//		} catch (IllegalArgumentException e) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-//		} catch (Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 작성 실패");
-//		}	
-//	}
-	// 댓글작성
 	@PostMapping("/board/companyView/reply")
 	@CrossOrigin
 	public ResponseEntity<String> insertReply(@RequestBody CreateReplyRequest request){
@@ -167,10 +153,6 @@ public class BoardApi {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 id의 멤버를 찾을 수 없습니다: " + request.getId().getId());
 	    }  
 	}
-
-
-
-
 	
 	// 댓글 조회
 	@GetMapping("/board/companyView/reply/{bno}")
@@ -178,6 +160,15 @@ public class BoardApi {
     public List<Map<String, Object>> getReplyRnoListByBno(@PathVariable Long bno) {
         return boardService.findReply(bno);
     }
+	
+	// 댓글 삭제
+	@DeleteMapping("/board/companyView/reply/delete/{rno}")
+	@CrossOrigin
+	public void deleteReply(
+			@PathVariable(name = "rno") Long rno
+			) {
+		boardService.deleteReply(rno);
+	}	
 
 	// 이미지 조회
 	@GetMapping("/api/images/{bno}")
@@ -205,8 +196,4 @@ public class BoardApi {
 //	        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 //	    }
 //	}
-
-
-	
-	
 }
