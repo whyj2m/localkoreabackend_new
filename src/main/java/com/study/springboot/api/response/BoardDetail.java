@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.study.springboot.entity.Board;
 import com.study.springboot.entity.FileData;
 import com.study.springboot.entity.Member;
 

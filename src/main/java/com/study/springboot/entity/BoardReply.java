@@ -47,18 +47,8 @@ public class BoardReply {
     @ManyToOne
     @JoinColumn(name="member_id", referencedColumnName = "id")
     private Member id;
-//    private Board bno;
-
-//    @ManyToOne
-//    @JoinColumn(name = "board_bno", referencedColumnName = "bno")
-//    private Board board;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_bno") // board_bno는 Board 엔티티의 bno와 매핑됩니다.
+    @JoinColumn(name = "board_bno") 
     private Board board;
-
-//     public Long getBoardBno() {
-//            return this.board.getBno();
-//        }
 
 }
