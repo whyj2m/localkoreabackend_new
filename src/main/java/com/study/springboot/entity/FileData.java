@@ -35,21 +35,13 @@ public class FileData {
         this.boardBno = boardBno;
     }
     
- // FileData에서 filePath를 이용하여 파일을 읽어오는 메서드
-//    public byte[] readFileData(FileData fileData) throws IOException {
-//        String filePath = fileData.getFilePath();
-//        Path path = Paths.get(filePath);
-//        return Files.readAllBytes(path);
-//    }
-    
     public String getUuid() {
         return this.uuid;
     }
     
-    // FileData에서 filePath를 이용하여 파일을 읽어오는 메서드
     public byte[] readFileData(FileData fileData) throws IOException {
         String filePath = fileData.getFilePath();
-        String uuid = fileData.getUuid(); // uuid 값 가져오기
+        String uuid = fileData.getUuid(); 
 
         Path path = Paths.get(filePath);
         return Files.readAllBytes(path);
