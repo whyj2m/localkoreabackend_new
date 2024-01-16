@@ -99,11 +99,30 @@ public class BoardService {
 	}
 	
 	// bno별 이미지조회
+//	public byte[] downloadImageSystem(Long boardBno) {
+//	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
+//
+//	    if (fileDataList.isEmpty()) {
+//	        return null;
+//	    }
+//
+//	    FileData fileData = fileDataList.get(0);
+//
+//	    String filePath = fileData.getFilePath();
+//
+//	    try {
+//	        return Files.readAllBytes(Paths.get(filePath));
+//	    } catch (IOException e) {
+//	        e.printStackTrace();
+//	        return null;
+//	    }
+//	}
+	
 	public byte[] downloadImageSystem(Long boardBno) {
 	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
 
 	    if (fileDataList.isEmpty()) {
-	        return null;
+	    	 return new byte[0];
 	    }
 
 	    FileData fileData = fileDataList.get(0);
@@ -114,7 +133,7 @@ public class BoardService {
 	        return Files.readAllBytes(Paths.get(filePath));
 	    } catch (IOException e) {
 	        e.printStackTrace();
-	        return null;
+	        return new byte[0];
 	    }
 	}
 
@@ -123,7 +142,7 @@ public class BoardService {
 		return fileDataRepository.findByBoardBno(boardBno);
 	}
 	
-	// bno별 이미지조회
+	// bno별 이미지 리스트 조회
 //	public ResponseEntity<byte[]> downloadImageSystem(Long boardBno) {
 //	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
 //
@@ -150,37 +169,16 @@ public class BoardService {
 //	}
 
 
-	// 오 리스트로불러와짐1
+	// 이미지 리스트1
 //	public List<FileData> findByBoardBno(Long boardBno) {
 //	    return fileDataRepository.findByBoardBno(boardBno);
 //	}
 
-	// 오 리스트로불러와짐2
+	// 이미지 리스트2
 //	public List<FileData> findByBoardBno(Long boardBno) {
 //	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
 //	    return fileDataList;
 //	}
-
-//	// 파일 업로드
-//	public String uploadImageSystem(MultipartFile file) throws IOException{
-//		String filePath = FOLDER_PATH + file.getOriginalFilename();
-//		FileData fileData = fileDataRepository.save(
-//				FileData.builder()
-////				.name(file.getOriginalFilename())
-////				.type(file.getContentType())
-//				.filePath(filePath)
-//				.origin(filePath)
-//				.uuid(filePath)
-//				.build()
-//				);
-//		file.transferTo(new File(filePath));
-//		
-//		if(filePath !=null) { // filePath가 있으면
-//			return "파일업로드 성공" + filePath;
-//		}
-//		return null;
-//	}
-//	
 
 	// 여행메이트 게시글 조회
 	public List<BoardList> findByCompany() {
