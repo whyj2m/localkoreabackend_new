@@ -98,7 +98,7 @@ public class BoardApi {
 	        @RequestParam(value = "locationCno") Long locationCno,
 	        @RequestParam(value = "location") String location,
 	        @RequestParam(value = "id")String id,
-	        @RequestParam(required = false) List<MultipartFile> files // 수정된 부분
+	        @RequestParam(required = false) List<MultipartFile> files
 	) {
 	    try {
 	        CreateAndEditBoardRequest request = new CreateAndEditBoardRequest();
@@ -110,10 +110,10 @@ public class BoardApi {
 
 	        Board board = boardService.insertBoard(request, id, files); // 게시글과 파일들을 함께 처리
 
-	        return ResponseEntity.ok("백엔드) 파일 업로드 성공");
+	        return ResponseEntity.ok("BackEnd: 파일 업로드 성공");
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("백엔드) 게시글 작성 오류" + e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("BackEnd: 게시글 작성 오류" + e.getMessage());
 	    }
 	  
 	}
@@ -161,7 +161,7 @@ public class BoardApi {
 	// 댓글 조회
 	@GetMapping("/board/companyView/reply/{bno}")
 	@CrossOrigin
-    public List<Map<String, Object>> getReplyRnoListByBno(@PathVariable Long bno) {
+    public List<Map<String, Object>> getReply(@PathVariable Long bno) {
         return boardService.findReply(bno);
     }
 	
@@ -177,7 +177,7 @@ public class BoardApi {
 	// 이미지 조회
 	@GetMapping("/api/images/{bno}")
 	@CrossOrigin
-	public ResponseEntity<?> downImage(@PathVariable("bno") Long bno) throws IOException{
+	public ResponseEntity<?> getImage(@PathVariable("bno") Long bno) throws IOException{
 		byte[] downloadImage = boardService.downloadImageSystem(bno);
 		if(downloadImage != null) {
 			return ResponseEntity.status(HttpStatus.OK)

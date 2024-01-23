@@ -27,9 +27,9 @@ public class BoardDetail {
 	private ZonedDateTime updateDate; 
 	private Member id;
 	private Member userName;
-	private String additionalInfo; //0107 추가
-	private Long locationCno; // 지역 카테고리 번호
-	private String location; // 지역 이름
+	private String additionalInfo;
+	private Long locationCno;
+	private String location;
 	private List<MultipartFile> files;
 	private List<FileData> imageInfo; // 이미지 정보 
 	  
