@@ -3,7 +3,6 @@ package com.study.springboot.service;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,6 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final TokenProvider tokenProvider;
-	private final FindPwMailService findPwMailService;
 	
 	public Member insertMember(CreateMemberRequest request) {
 		Member member = Member.builder()
