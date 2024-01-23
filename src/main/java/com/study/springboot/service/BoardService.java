@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -83,7 +80,7 @@ public class BoardService {
 	// bno별 관광지 추천 상세 조회
 	@Transactional
 	public BoardDetail findByBno(Long bno) {
-	    Board board = boardRepository.findByBno(bno).orElseThrow(() -> new EntityNotFoundException("없는 글번호 입니다.: " + bno));
+	    Board board = boardRepository.findByBno(bno).orElseThrow(() -> new EntityNotFoundException("없는 게시글입니다 : " + bno));
 	    
 	    return BoardDetail.builder()
 	            .bno(board.getBno())
@@ -182,10 +179,8 @@ public class BoardService {
 
 	// 여행메이트 게시글 조회
 	public List<BoardList> findByCompany() {
-	    // BoardCategory 객체 생성 및 초기화
 	    BoardCategory category = BoardCategory.builder().cno(2L).build();
 		    
-    	// 해당 카테고리로 게시글 조회
 	    List<Board> boards = boardRepository.findByCno(category);
 	    	   
 	    // 조회된 게시글을 BoardList로 변환하여 반환
@@ -209,7 +204,7 @@ public class BoardService {
 	// 여형메이트 bno별 상세조회
 	@Transactional
 	public BoardDetail getCompanyDetail(Long bno) {
-	    Board board = boardRepository.findByBno(bno).orElseThrow(() -> new EntityNotFoundException("없는 글번호 입니다.: " + bno));
+	    Board board = boardRepository.findByBno(bno).orElseThrow(() -> new EntityNotFoundException("없는 글번호입니다"));
 	    
 	    return BoardDetail.builder()
 	            .bno(board.getBno())
@@ -283,13 +278,13 @@ public class BoardService {
 	// 글 수정
 	public void editBoard(Long bno, CreateAndEditBoardRequest request) {
 		Board board = boardRepository.findById(bno)
-				.orElseThrow(() -> new RuntimeException("Known bno"));
+				.orElseThrow(() -> new RuntimeException("없는 글번호입니다"));
 		
 	    BoardCategory boardCategory = boardCategoryRepository.findById(request.getBoardCno())
-	            .orElseThrow(() -> new RuntimeException("Known cno"));
+	            .orElseThrow(() -> new RuntimeException("없는 카테고리입니다"));
 
 	    LocationCategory locationCategory = locationCategoryRepository.findById(request.getLocationCno())
-	            .orElseThrow(() -> new RuntimeException("Known lcno"));
+	            .orElseThrow(() -> new RuntimeException("없는 지역입니다"));
 	    
 		board.changeBoard(request.getTitle(), request.getContent(), boardCategory, locationCategory, request.getLocation());
 		boardRepository.save(board);
@@ -311,7 +306,7 @@ public class BoardService {
 	    boardRepository.delete(board);
 	}
 
-	// 첨부 파일 삭제 메서드
+	// 첨부 파일 삭제
 	private void deleteAttachment(FileData attachment) {
 	    // 파일 시스템에서 파일 삭제
 	    File file = new File(attachment.getFilePath());
@@ -325,7 +320,7 @@ public class BoardService {
 	// 조회수
 	public void viewCount(Long bno) {
 		Board board = boardRepository.findById(bno)
-				.orElseThrow(()-> new RuntimeException("게시글을 찾을 수 없습니다."));
+				.orElseThrow(()-> new RuntimeException("없는 게시글입니다 : " + bno));
 		board.viewCount();
 		boardRepository.save(board);
 	}
@@ -334,7 +329,7 @@ public class BoardService {
 	@Transactional
 	public void BoardReply(Long bno, String content, Member member) {
 	    Board board = boardRepository.findByBno(bno)
-	            .orElseThrow(() -> new EntityNotFoundException("해당 bno의 게시글을 찾을 수 없습니다: " + bno));
+	            .orElseThrow(() -> new EntityNotFoundException("없는 게시글입니다 : " + bno));
 
 	    BoardReply reply = BoardReply.builder()
 	            .content(content)
@@ -353,7 +348,7 @@ public class BoardService {
 	    List<BoardReply> replies = boardReplyRepository.findByBoardBno(bno);
 
 	    if (replies.isEmpty()) {
-	        throw new EntityNotFoundException("해당 번호의 댓글이 없습니다.: " + bno);
+//	        throw new EntityNotFoundException("없는 게시글입니다 : " + bno);
 	    }
 
 	    return replies.stream()
