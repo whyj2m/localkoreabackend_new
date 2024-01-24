@@ -324,7 +324,7 @@ public class BoardService {
 		board.viewCount();
 		boardRepository.save(board);
 	}
-
+	
 	// 댓글 작성
 	@Transactional
 	public void BoardReply(Long bno, String content, Member member) {
@@ -342,7 +342,7 @@ public class BoardService {
 	    boardReplyRepository.save(reply);
 	}
 
-	// 댓글조회
+	// 댓글 조회
 	@Transactional
 	public List<Map<String, Object>> findReply(Long bno) {
 	    List<BoardReply> replies = boardReplyRepository.findByBoardBno(bno);
