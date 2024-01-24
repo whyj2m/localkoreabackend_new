@@ -43,5 +43,4 @@ public class BoardReply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_bno") 
     private Board board;
-
 }
