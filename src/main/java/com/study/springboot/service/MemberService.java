@@ -20,6 +20,7 @@ import com.study.springboot.config.jwt.TokenProvider;
 import com.study.springboot.entity.Member;
 import com.study.springboot.repository.MemberRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -106,6 +107,8 @@ public class MemberService {
 									.build();
 	}
 	
+	// 회원 삭제
+	@Transactional
 	public void deleteMember(String id) {
 		Member member = memberRepository.findById(id).orElseThrow();
 		memberRepository.delete(member);
