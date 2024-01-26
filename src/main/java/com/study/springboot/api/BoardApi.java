@@ -40,14 +40,14 @@ public class BoardApi {
 	private final MemberRepository memberRepository;
 	 
 	// 관광지 추천 게시글 목록 조회
-	@GetMapping("/board/tourisSpot")
+	@GetMapping("/board/touristSpot")
 	@CrossOrigin
 	public List<BoardList> getBoardList(){
-		return boardService.findByTourisSpot();
+		return boardService.findByTouristSpot();
 	}
 	
 	// 관광지 추천 bno별 상세 조회
-	@GetMapping("/board/tourisSpot/{bno}")
+	@GetMapping("/board/touristSpot/{bno}")
 	@CrossOrigin
 	public BoardDetail getBoardDetail(@PathVariable Long bno) {
 	    BoardDetail board = boardService.findByBno(bno);
