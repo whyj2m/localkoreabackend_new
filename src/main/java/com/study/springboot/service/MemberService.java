@@ -18,6 +18,9 @@ import com.study.springboot.api.response.MemberDetail;
 import com.study.springboot.api.response.MemberList;
 import com.study.springboot.config.jwt.TokenProvider;
 import com.study.springboot.entity.Member;
+import com.study.springboot.repository.BoardReplyRepository;
+import com.study.springboot.repository.BoardRepository;
+import com.study.springboot.repository.HeartRepository;
 import com.study.springboot.repository.MemberRepository;
 
 import jakarta.transaction.Transactional;
@@ -28,6 +31,9 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 	
 	private final MemberRepository memberRepository;
+	private final BoardRepository boardRepository;
+	private final BoardReplyRepository boardReplyRepository;
+	private final HeartRepository heartRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final TokenProvider tokenProvider;
 	
@@ -48,6 +54,7 @@ public class MemberService {
 		return member;
 	}
 	
+	// id 중복확인
 	public boolean checkIdDuplicate(String id) {
 		return memberRepository.existsById(id);
 	}
@@ -110,10 +117,16 @@ public class MemberService {
 	// 회원 삭제
 	@Transactional
 	public void deleteMember(String id) {
-		Member member = memberRepository.findById(id).orElseThrow();
-		memberRepository.delete(member);
+		Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+		
+		boardRepository.deleteAllById_Id(member.getId());
+		boardReplyRepository.deleteAllById_Id(member.getId());
+		heartRepository.deleteAllById_Id(member.getId());
+		
+		memberRepository.deleteById(id);
 	}
 
+	// 회원정보 수정
 	public void editMemberInfo(String id, EditMemberInfo request) {
 		Member member = memberRepository.findById(id)
 				.orElseThrow(()->new RuntimeException("존재하지 않는 id입니다."));
