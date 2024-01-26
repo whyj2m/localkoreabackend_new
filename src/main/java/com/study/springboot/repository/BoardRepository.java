@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import com.study.springboot.entity.category.BoardCategory;
 import com.study.springboot.entity.category.LocationCategory;
+
+import jakarta.transaction.Transactional;
+
 import com.study.springboot.entity.Board;
 import com.study.springboot.entity.Member;
 
@@ -35,5 +39,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
        * @author bhy98 백혜윤
        * 작성자 id로 게시글 삭제
        */
-//      void deleteAllById(Member member);
+      @Modifying
+      @Transactional
+      void deleteAllById_Id(String memberId);
 }

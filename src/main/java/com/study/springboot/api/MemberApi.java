@@ -208,10 +208,15 @@ public class MemberApi {
 	}
 	
 	@DeleteMapping("/member/{id}")
-	public void deleteMember(
+	public ResponseEntity<String> deleteMember(
 			@PathVariable(name="id") String id
 			) {
-		memberService.deleteMember(id);
+		try {
+			memberService.deleteMember(id);
+			return ResponseEntity.ok("회원이 성공적으로 삭제되었습니다.");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 삭제 실패");
+		}
 	}
 
 }
