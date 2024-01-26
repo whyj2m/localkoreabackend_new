@@ -47,17 +47,74 @@ public class BoardService {
 	private final BoardReplyRepository boardReplyRepository;
 	private final MemberRepository memberRepository;
 	
-	 // 파일업로드
+	// 파일업로드
     private final String FOLDER_PATH = "c:\\images\\";
 	private final FileDataRepository fileDataRepository;
 	
+	// 글 작성
+	public Board insertBoard(CreateAndEditBoardRequest request, 
+			@RequestParam(value = "id") String id, // id 파라미터를 통해 member가져오기
+	        @RequestParam(required = false) List<MultipartFile> files) throws IOException {
+	    log.info("insert");
+	    BoardCategory boardCategory = boardCategoryRepository.findById(request.getBoardCno()).orElse(null);
+	    LocationCategory locationCategory = locationCategoryRepository.findById(request.getLocationCno()).orElse(null);
+	    
+	    // 파일 첨부 확인
+	    boolean filesAttached = files != null && !files.isEmpty();
+	    
+	    // 첨부 파일 없을 시 빈 리스트로 설정
+	    if (!filesAttached) {
+	        files = new ArrayList<>(); // 파일 리스트를 빈 리스트로 설정
+	    }
+	    
+	    Member member = memberRepository.findById(id).orElse(null); // 멤버에서 id
+
+	    Board board = Board.builder()
+	            .title(request.getTitle())
+	            .content(request.getContent())
+	            .regDate(ZonedDateTime.now())
+	            .updateDate(ZonedDateTime.now())
+	            .cno(boardCategory)
+	            .locno(locationCategory)
+	            .location(request.getLocation())
+	            .id(member)
+	            .build();
+	    boardRepository.save(board);
+	    
+	    Long bno = board.getBno();
+	    
+	    // 파일 첨부가 있는 경우에만 파일 업로드 수행
+	    if (filesAttached) {
+	        String folderPath = FOLDER_PATH + bno + File.separator;
+	        File folder = new File(folderPath);
+
+	        if (!folder.exists()) {
+	            folder.mkdirs(); // 폴더 생성
+	        }
+
+	        // 파일 업로드
+	        for (MultipartFile file : files) {
+	            String filePath = folderPath + file.getOriginalFilename();
+	            FileData fileData = fileDataRepository.save(
+	                    FileData.builder()
+	                            .uuid(file.getOriginalFilename())
+	                            .origin(file.getContentType())
+	                            .filePath(filePath)
+	                            .boardBno(board.getBno())
+	                            .build()
+	            );
+	            file.transferTo(new File(filePath));
+	        }
+	    }
+	    return board;
+	}
+	
 	// 관광지 추천 게시글 조회
 	@Transactional
-	public List<BoardList> findByTourisSpot() {
-	    // BoardCategory 객체 생성 및 초기화
-	    BoardCategory category = BoardCategory.builder().cno(1L).build();
+	public List<BoardList> findByTouristSpot() {
+
+		BoardCategory category = BoardCategory.builder().cno(1L).build();
 	    
-	    // 해당 카테고리로 게시글 조회
 	    List<Board> boards = boardRepository.findByCno(category);
 	    
 	    // 조회된 게시글을 BoardList로 변환하여 반환
@@ -96,25 +153,6 @@ public class BoardService {
 	}
 	
 	// bno별 이미지조회
-//	public byte[] downloadImageSystem(Long boardBno) {
-//	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
-//
-//	    if (fileDataList.isEmpty()) {
-//	        return null;
-//	    }
-//
-//	    FileData fileData = fileDataList.get(0);
-//
-//	    String filePath = fileData.getFilePath();
-//
-//	    try {
-//	        return Files.readAllBytes(Paths.get(filePath));
-//	    } catch (IOException e) {
-//	        e.printStackTrace();
-//	        return null;
-//	    }
-//	}
-	
 	public byte[] downloadImageSystem(Long boardBno) {
 	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
 
@@ -200,8 +238,7 @@ public class BoardService {
 	            .collect(Collectors.toList());
 		}	
 	
-	
-	// 여형메이트 bno별 상세조회
+	// 여형메이트 bno별 상세 조회
 	@Transactional
 	public BoardDetail getCompanyDetail(Long bno) {
 	    Board board = boardRepository.findByBno(bno).orElseThrow(() -> new EntityNotFoundException("없는 글번호입니다"));
@@ -216,65 +253,7 @@ public class BoardService {
                 .location(board.getLocation())
 	            .build();
 	}
-
-	// 글 작성
-	public Board insertBoard(CreateAndEditBoardRequest request, 
-			@RequestParam(value = "id") String id, // id 파라미터를 통해 member가져오기
-	        @RequestParam(required = false) List<MultipartFile> files) throws IOException {
-	    log.info("insert");
-	    BoardCategory boardCategory = boardCategoryRepository.findById(request.getBoardCno()).orElse(null);
-	    LocationCategory locationCategory = locationCategoryRepository.findById(request.getLocationCno()).orElse(null);
-	    
-	    // 파일 첨부 확인
-	    boolean filesAttached = files != null && !files.isEmpty();
-	    
-	    // 첨부 파일 없을 시 빈 리스트로 설정
-	    if (!filesAttached) {
-	        files = new ArrayList<>(); // 파일 리스트를 빈 리스트로 설정
-	    }
-	    
-	    Member member = memberRepository.findById(id).orElse(null); // 멤버에서 id
-
-	    Board board = Board.builder()
-	            .title(request.getTitle())
-	            .content(request.getContent())
-	            .regDate(ZonedDateTime.now())
-	            .updateDate(ZonedDateTime.now())
-	            .cno(boardCategory)
-	            .locno(locationCategory)
-	            .location(request.getLocation())
-	            .id(member)
-	            .build();
-	    boardRepository.save(board);
-	    
-	    Long bno = board.getBno();
-	    
-	    // 파일 첨부가 있는 경우에만 파일 업로드 수행
-	    if (filesAttached) {
-	        String folderPath = FOLDER_PATH + bno + File.separator;
-	        File folder = new File(folderPath);
-
-	        if (!folder.exists()) {
-	            folder.mkdirs(); // 폴더 생성
-	        }
-
-	        // 파일 업로드
-	        for (MultipartFile file : files) {
-	            String filePath = folderPath + file.getOriginalFilename();
-	            FileData fileData = fileDataRepository.save(
-	                    FileData.builder()
-	                            .uuid(file.getOriginalFilename())
-	                            .origin(file.getContentType())
-	                            .filePath(filePath)
-	                            .boardBno(board.getBno())
-	                            .build()
-	            );
-	            file.transferTo(new File(filePath));
-	        }
-	    }
-	    return board;
-	}
-
+	
 	// 글 수정
 	public void editBoard(Long bno, CreateAndEditBoardRequest request) {
 		Board board = boardRepository.findById(bno)
@@ -290,6 +269,22 @@ public class BoardService {
 		boardRepository.save(board);
 	}
 		
+	// 글 삭제 - 원래내꺼
+//	public void deleteBoard(Long bno) {
+//	    Board board = boardRepository.findById(bno).orElseThrow();
+//
+//	    // 게시글에 첨부된 파일을 가져와 삭제
+//	    List<FileData> attachments = fileDataRepository.findByBoardBno(board.getBno());
+//
+//	    if (attachments != null && !attachments.isEmpty()) {
+//	        for (FileData attachment : attachments) {
+//	            // 첨부 파일 삭제
+//	            deleteAttachment(attachment);
+//	        }
+//	    }
+//	    boardRepository.delete(board);
+//	}
+	
 	// 글 삭제
 	public void deleteBoard(Long bno) {
 	    Board board = boardRepository.findById(bno).orElseThrow();
@@ -303,9 +298,23 @@ public class BoardService {
 	            deleteAttachment(attachment);
 	        }
 	    }
+
+	    // 댓글 삭제
+	    List<BoardReply> replies = boardReplyRepository.findByBoardBno(board.getBno());
+	    if (replies != null && !replies.isEmpty()) {
+	        for (BoardReply reply : replies) {
+	            deleteReply(reply.getRno());
+	        }
+	    }
+
 	    boardRepository.delete(board);
 	}
-
+	
+	// 댓글 단일 삭제
+	public void deleteReply(Long rno) {
+		    boardReplyRepository.deleteById(rno);
+	}	
+	
 	// 첨부 파일 삭제
 	private void deleteAttachment(FileData attachment) {
 	    // 파일 시스템에서 파일 삭제
@@ -337,7 +346,7 @@ public class BoardService {
 	            .id(member)
 	            .build();
 
-	    reply.setBoard(board); // 댓글에 해당하는 게시글 설정
+	    reply.setBoard(board);
 
 	    boardReplyRepository.save(reply);
 	}
@@ -365,10 +374,7 @@ public class BoardService {
 	            .collect(Collectors.toList());
 	}
 
-	// 댓글 삭제
-	public void deleteReply(Long rno) {
-	    boardReplyRepository.deleteById(rno);
-	}
+	
 
 	/**
      * @author bhy98 백혜윤
