@@ -28,5 +28,5 @@ public interface BoardReplyRepository extends JpaRepository<BoardReply, Long> {
      * @author bhy98 백혜윤
      * 작성자 id로 댓글 삭제
      */
-    void deletaAllById(Member member);
+//    void deletaAllById(Member member);
 }

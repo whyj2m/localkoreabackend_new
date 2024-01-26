@@ -35,5 +35,5 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
        * @author bhy98 백혜윤
        * 작성자 id로 게시글 삭제
        */
-      void deleteAllById(Member member);
+//      void deleteAllById(Member member);
 }
