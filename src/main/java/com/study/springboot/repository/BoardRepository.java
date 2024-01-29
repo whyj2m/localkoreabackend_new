@@ -42,4 +42,10 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
       @Modifying
       @Transactional
       void deleteAllById_Id(String memberId);
+      
+      /**
+       * @author bhy98 백혜윤
+       * 작성자 id로 게시글 리스트 조회
+       */
+      public List<Board> findById_Id(String memberId);
 }
