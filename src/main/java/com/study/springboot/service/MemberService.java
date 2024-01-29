@@ -2,6 +2,7 @@ package com.study.springboot.service;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import com.study.springboot.api.response.LoginResponse;
 import com.study.springboot.api.response.MemberDetail;
 import com.study.springboot.api.response.MemberList;
 import com.study.springboot.config.jwt.TokenProvider;
+import com.study.springboot.entity.Board;
 import com.study.springboot.entity.Member;
 import com.study.springboot.repository.BoardReplyRepository;
 import com.study.springboot.repository.BoardRepository;
@@ -36,6 +38,7 @@ public class MemberService {
 	private final HeartRepository heartRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final TokenProvider tokenProvider;
+	private final BoardService boardService;
 	
 	public Member insertMember(CreateMemberRequest request) {
 		Member member = Member.builder()
@@ -118,6 +121,12 @@ public class MemberService {
 	@Transactional
 	public void deleteMember(String id) {
 		Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+		
+		List<Board> boards = boardRepository.findById_Id(id);
+		for (Board board : boards) {
+			// 게시글에 포함된 댓글 삭제
+			boardService.deleteBoard(board.getBno());
+		}
 		
 		boardRepository.deleteAllById_Id(member.getId());
 		boardReplyRepository.deleteAllById_Id(member.getId());
