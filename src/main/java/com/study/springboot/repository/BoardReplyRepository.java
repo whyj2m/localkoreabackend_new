@@ -34,4 +34,6 @@ public interface BoardReplyRepository extends JpaRepository<BoardReply, Long> {
     @Modifying
     @Transactional
     void deleteAllById_Id(String memberId);
+
+	void deleteAllByBoardBno(Long bno);
 }

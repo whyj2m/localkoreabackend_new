@@ -3,6 +3,7 @@ package com.study.springboot.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -159,14 +160,17 @@ public class BoardService {
 	    if (fileDataList.isEmpty()) {
 	    	 return new byte[0];
 	    }
-
+	    
 	    FileData fileData = fileDataList.get(0);
 
 	    String filePath = fileData.getFilePath();
 
 	    try {
 	        return Files.readAllBytes(Paths.get(filePath));
-	    } catch (IOException e) {
+	    }catch (NoSuchFileException e) { // 파일없을때
+	    	return new byte[0]; // 빈배열로 전송 오류 안 나오도록  	
+	    }
+	    catch (IOException e) { 
 	        e.printStackTrace();
 	        return new byte[0];
 	    }
@@ -176,44 +180,6 @@ public class BoardService {
 	public List<FileData> findByBoardBno(Long boardBno) {
 		return fileDataRepository.findByBoardBno(boardBno);
 	}
-	
-	// bno별 이미지 리스트 조회
-//	public ResponseEntity<byte[]> downloadImageSystem(Long boardBno) {
-//	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
-//
-//	    if (fileDataList.isEmpty()) {
-//	        return ResponseEntity.notFound().build();
-//	    }
-//
-//	    FileData fileData = fileDataList.get(0);
-//
-//	    String filePath = fileData.getFilePath();
-//	    String uuid = fileData.getUuid();
-//
-//	    try {
-//	        byte[] imageBytes = Files.readAllBytes(Paths.get(filePath));
-//	        HttpHeaders headers = new HttpHeaders();
-//	        headers.add("Content-Type", "image/jpeg"); // 이미지 타입에 맞게 변경
-//	        headers.add("uuid", uuid); // uuid를 응답 헤더에 추가
-//
-//	        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
-//	    } catch (IOException e) {
-//	        e.printStackTrace();
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//	    }
-//	}
-
-
-	// 이미지 리스트1
-//	public List<FileData> findByBoardBno(Long boardBno) {
-//	    return fileDataRepository.findByBoardBno(boardBno);
-//	}
-
-	// 이미지 리스트2
-//	public List<FileData> findByBoardBno(Long boardBno) {
-//	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
-//	    return fileDataList;
-//	}
 
 	// 여행메이트 게시글 조회
 	public List<BoardList> findByCompany() {
@@ -268,22 +234,6 @@ public class BoardService {
 		board.changeBoard(request.getTitle(), request.getContent(), boardCategory, locationCategory, request.getLocation());
 		boardRepository.save(board);
 	}
-		
-	// 글 삭제 - 원래내꺼
-//	public void deleteBoard(Long bno) {
-//	    Board board = boardRepository.findById(bno).orElseThrow();
-//
-//	    // 게시글에 첨부된 파일을 가져와 삭제
-//	    List<FileData> attachments = fileDataRepository.findByBoardBno(board.getBno());
-//
-//	    if (attachments != null && !attachments.isEmpty()) {
-//	        for (FileData attachment : attachments) {
-//	            // 첨부 파일 삭제
-//	            deleteAttachment(attachment);
-//	        }
-//	    }
-//	    boardRepository.delete(board);
-//	}
 	
 	// 글 삭제
 	public void deleteBoard(Long bno) {
@@ -357,7 +307,6 @@ public class BoardService {
 	    List<BoardReply> replies = boardReplyRepository.findByBoardBno(bno);
 
 	    if (replies.isEmpty()) {
-//	        throw new EntityNotFoundException("없는 게시글입니다 : " + bno);
 	    }
 
 	    return replies.stream()
