@@ -50,6 +50,7 @@ public class WebSecurityConfig {
 			.formLogin().disable()
 			.httpBasic().disable()
 			.authorizeRequests()
+				.requestMatchers("/", "/oauth/loginInfo").permitAll()
 //				.requestMatchers("/login","/signup").permitAll()
 //				.requestMatchers("/mypage/").hasRole("USER")
 //				.requestMatchers("/admin").hasRole("ADMIN")
@@ -57,12 +58,12 @@ public class WebSecurityConfig {
 //				.requestMatchers("/oauth2/authorization/google").permitAll()
 			.and()
 				.oauth2Login()
+				.defaultSuccessUrl("/oauth/loginInfo", true) //OAuth2 성공시 redirect
 				.successHandler(new MyAuthenticationSuccessHandler())
-//				.defaultSuccessUrl("/oauth/loginInfo", true) //OAuth2 성공시 redirect
 				.userInfoEndpoint()
 				.userService(oAuthService)
 				.and()
-				.and()
+			.and()
 			.headers().frameOptions().sameOrigin()
 				;
 //			.and()
