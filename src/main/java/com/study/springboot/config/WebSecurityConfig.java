@@ -43,55 +43,61 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+//		http
+//			.httpBasic(AbstractHttpConfigurer::disable)
+//			.csrf(AbstractHttpConfigurer::disable)
+//			.cors(AbstractHttpConfigurer::disable);
+//		http
+//			.authorizeHttpRequests(
+//					authorize -> authorize
+//						.requestMatchers("/login","/signup").permitAll()
+//						.requestMatchers("/mypage/**","/unregister").permitAll()
+//						.requestMatchers("/board/touristSpot","/board/touristSpotView/**","/board/companyView/**", "/board/company").permitAll()
+//						.requestMatchers("/board/notice", "/board/boardWrite","/board/edit/**").permitAll()
+//						.requestMatchers("/local/**","/localFoods/**", "/place/**", "/festival/**").permitAll()
+//						.requestMatchers("/search/**").permitAll()
+//						.requestMatchers("/", "/oauth/loginInfo").permitAll()
+//						.anyRequest().authenticated()
+//					);
+//		http
+//			.sessionManagement(
+//					sessionManagement -> 
+//						sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//					);
 		http
-			.httpBasic(AbstractHttpConfigurer::disable)
-			.csrf(AbstractHttpConfigurer::disable)
-			.cors(AbstractHttpConfigurer::disable);
-		http
-			.authorizeHttpRequests(
-					authorize -> authorize
-						.requestMatchers("/login","/signup").permitAll()
-						.requestMatchers("/mypage/**","/unregister").permitAll()
-						.requestMatchers("/board/touristSpot","/board/touristSpotView/**","/board/companyView/**", "/board/company").permitAll()
-						.requestMatchers("/board/notice", "/board/boardWrite","/board/edit/**").permitAll()
-						.requestMatchers("/local/**","/localFoods/**", "/place/**", "/festival/**").permitAll()
-						.requestMatchers("/search/**").permitAll()
-						.requestMatchers("/", "/oauth/loginInfo").permitAll()
-						.anyRequest().authenticated()
-					);
-		http
-			.sessionManagement(
-					sessionManagement -> 
-						sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-					);
-			
-//			.cors().and()
-//			.csrf().disable()
-//			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.cors().and()
+			.csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.formLogin().disable()
+			.httpBasic().disable()
+			.authorizeRequests()
+				.requestMatchers("/", "/oauth/loginInfo").permitAll()
+				.requestMatchers("/login","/signup").permitAll()
+				.requestMatchers("/mypage/**","/unregister").permitAll()
+				.requestMatchers("/board/touristSpot","/board/touristSpotView/**","/board/companyView/**", "/board/company").permitAll()
+				.requestMatchers("/board/notice", "/board/boardWrite","/board/edit/**").permitAll()
+				.requestMatchers("/local/**","/localFoods/**", "/place/**", "/festival/**").permitAll()
+				.requestMatchers("/search/**").permitAll()
+//				.requestMatchers("/login","/signup").permitAll()
+//				.requestMatchers("/mypage/").hasRole("USER")
+//				.requestMatchers("/admin").hasRole("ADMIN")
+				.anyRequest().permitAll()
+//				.requestMatchers("/oauth2/authorization/google").permitAll()
+			.and()
+				.oauth2Login()
+				.defaultSuccessUrl("/oauth/loginInfo", true) //OAuth2 성공시 redirect
+				.successHandler(new MyAuthenticationSuccessHandler())
+				.userInfoEndpoint()
+				.userService(oAuthService)
+				.and()
+			.and()
+			.headers().frameOptions().sameOrigin()
+				;
 //			.and()
-//			.formLogin().disable()
-//			.httpBasic().disable()
-//			.authorizeRequests()
-//				.requestMatchers("/", "/oauth/loginInfo").permitAll()
-////				.requestMatchers("/login","/signup").permitAll()
-////				.requestMatchers("/mypage/").hasRole("USER")
-////				.requestMatchers("/admin").hasRole("ADMIN")
-//				.anyRequest().permitAll()
-////				.requestMatchers("/oauth2/authorization/google").permitAll()
+//			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 //			.and()
-//				.oauth2Login()
-//				.defaultSuccessUrl("/oauth/loginInfo", true) //OAuth2 성공시 redirect
-//				.successHandler(new MyAuthenticationSuccessHandler())
-//				.userInfoEndpoint()
-//				.userService(oAuthService)
-//				.and()
-//			.and()
-//			.headers().frameOptions().sameOrigin()
-//				;
-////			.and()
-////			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-////			.and()
-////			.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JwtAuthenticationFilter를 AnotherFilter 뒤에 추가
+//			.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JwtAuthenticationFilter를 AnotherFilter 뒤에 추가
 		
 		return http.build();
 	}
