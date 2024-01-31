@@ -47,11 +47,13 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 		memberProfile.setId(userId); 
 		Member member = saveOrUpdate(memberProfile);
 		
-		
 		Map<String, Object> customAttribute = customAttribute(attributes, userNameAttributeName, memberProfile, registrationId);
 		// 멤버를 저장 또는 업데이트 한 후
 		String token = tokenProvider.generateToken(member, Duration.ofMinutes(30)); // 필요에 따라 만료 시간 조정
 		customAttribute.put("token", token);
+		
+		System.out.println("OAuth2User: " + oAuth2User);
+		System.out.println("Custom Attributes: " + customAttribute);
 		
 		return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("USER")), customAttribute, userNameAttributeName);
 	}
