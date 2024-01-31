@@ -28,7 +28,7 @@ public class OAuthController {
         }
 		OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 		Map<String, Object> attributes = oAuth2User.getAttributes();
-		return attributes.toString();
+		return "redirect:/";
 	}
 
 }
