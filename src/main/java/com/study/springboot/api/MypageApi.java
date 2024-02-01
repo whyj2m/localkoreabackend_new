@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/localkorea")
 public class MypageApi {
 	private final MemberService memberService;
 	private final BoardService boardService;
