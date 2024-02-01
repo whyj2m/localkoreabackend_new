@@ -18,7 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer, WebSocketConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://3.35.217.163")
+                .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true)
@@ -28,6 +28,6 @@ public class WebMvcConfig implements WebMvcConfigurer, WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(new WebSocketHandler(), "/socket")
-                .setAllowedOrigins("http://3.35.217.163"); // 클라이언트의 주소
+                .setAllowedOrigins("http://localhost:3000"); // 클라이언트의 주소
     }
 }
