@@ -35,7 +35,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/localkorea")
 public class BoardApi {
 
 	private final BoardService boardService;
