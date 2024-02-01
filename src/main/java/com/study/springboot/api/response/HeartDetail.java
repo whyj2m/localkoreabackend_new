@@ -1,6 +1,5 @@
 package com.study.springboot.api.response;
 
-import com.study.springboot.entity.LocalPlaces;
 import com.study.springboot.entity.Member;
 
 import lombok.AllArgsConstructor;

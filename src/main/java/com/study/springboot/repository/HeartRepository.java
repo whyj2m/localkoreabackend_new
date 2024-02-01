@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import com.study.springboot.entity.Heart;
-import com.study.springboot.entity.Member;
 
 import jakarta.transaction.Transactional;
 
