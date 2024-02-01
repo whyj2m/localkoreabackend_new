@@ -23,18 +23,19 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class LocationApi {
 	
 	@Autowired
 	private LocationService locationService;
 	
 	@GetMapping("/locations")
+	@CrossOrigin
 	public List<LocationList> getLocationList(){
 		return locationService.findAllLocations();
 	}
 	
 	@GetMapping("/location/{localNo}")
+	@CrossOrigin
 	public LocationDetail getLocation(
 			@PathVariable(name = "localNo") Long localNo
 			) {
@@ -42,6 +43,7 @@ public class LocationApi {
 	}
 	
 	@PostMapping("/location")
+	@CrossOrigin
 	public ResponseEntity<String> inserLocation(
 			@RequestBody CreateAndEditLocationRequest request
 			){
@@ -54,6 +56,7 @@ public class LocationApi {
 	}
 	
 	@PutMapping("/location/{localNo}")
+	@CrossOrigin
 	public void editLocation(
 			@PathVariable(name = "localNo") Long localNo,
 			@RequestBody CreateAndEditLocationRequest request
@@ -62,6 +65,7 @@ public class LocationApi {
 	}
 	
 	@DeleteMapping("/location/{localNo}")
+	@CrossOrigin
 	public void deleteLocation(
 			@PathVariable(name = "localNo") Long localNo
 			) {

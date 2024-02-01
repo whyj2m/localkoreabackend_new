@@ -31,21 +31,15 @@ public class WebMvcConfig implements WebMvcConfigurer, WebSocketConfigurer {
     
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedMethod("OPTIONS");
-        configuration.addAllowedMethod("HEAD");
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
-        configuration.addAllowedMethod("DELETE");
-        configuration.addAllowedMethod("PUT");
-        configuration.addAllowedMethod("PATCH");
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
-        return source;
-    }
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.addAllowedOrigin("http://3.35.217.163");
+    configuration.addAllowedMethod("*");
+    configuration.addAllowedHeader("*");
+    configuration.setAllowCredentials(true);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+}
     
 	@Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
