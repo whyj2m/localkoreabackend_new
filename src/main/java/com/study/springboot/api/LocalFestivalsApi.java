@@ -24,18 +24,19 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class LocalFestivalsApi {
 	
 	@Autowired
 	private LocalFestivalsService localFestivalsService;
 	
 	@GetMapping("/localFestivals")
+	@CrossOrigin
 	public List<LocalFestivalsList> getLocalFestivalsList(){
 		return localFestivalsService.findAllFestivals();
 	}
 	
 	@GetMapping("/localFestival/{festivalNo}")
+	@CrossOrigin
 	public ResponseEntity<LocalFestivalsDetail> getFestival(
 	        @PathVariable(name = "festivalNo") Long festivalNo
 	) {
@@ -54,6 +55,7 @@ public class LocalFestivalsApi {
 
 
 	@GetMapping("/localFestivals/{localNo}")
+	@CrossOrigin
 	public List<LocalFestivalsList> getFestivalByLocalNo(
 			@PathVariable(name="localNo") Location localNo
 			) {
@@ -61,6 +63,7 @@ public class LocalFestivalsApi {
 	}
 	
 	@PostMapping("/localFestival")
+	@CrossOrigin
 	public ResponseEntity<String> insertLocalFestival(
 			@RequestBody CreateAndEditLocalFestivalRequest request
 			){
@@ -73,6 +76,7 @@ public class LocalFestivalsApi {
 	}
 	
 	@PutMapping("/localFestival/{festivalNo}")
+	@CrossOrigin
 	public void editLocalFestivals(
 			@PathVariable(name="festivalNo") Long festivalNo,
 			@RequestBody CreateAndEditLocalFestivalRequest request
@@ -81,6 +85,7 @@ public class LocalFestivalsApi {
 	}
 	
 	@DeleteMapping("/localFestival/{festivalNo}")
+	@CrossOrigin
 	public void deleteFestival(
 			@PathVariable(name="festivalNo") Long festivalNo
 			) {
