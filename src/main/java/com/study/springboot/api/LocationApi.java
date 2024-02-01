@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/localkorea")
 public class LocationApi {
 	
 	@Autowired
