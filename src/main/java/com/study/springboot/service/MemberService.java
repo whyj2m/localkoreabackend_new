@@ -2,7 +2,6 @@ package com.study.springboot.service;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;

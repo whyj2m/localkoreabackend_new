@@ -3,7 +3,6 @@ package com.study.springboot.entity;
 import java.time.ZonedDateTime;
 
 import com.study.springboot.entity.category.BoardCategory;
-import com.study.springboot.entity.category.BoardCategory.BoardCategoryBuilder;
 import com.study.springboot.entity.category.LocationCategory;
 
 import jakarta.persistence.Entity;

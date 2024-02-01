@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.study.springboot.api.response.BoardList;
-import com.study.springboot.entity.BoardReply;
 import com.study.springboot.service.BoardService;
 import com.study.springboot.service.MemberService;
 

@@ -8,9 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.study.springboot.entity.LocalFestivals;
-import com.study.springboot.entity.LocalFoods;
 import com.study.springboot.entity.Location;
-import com.study.springboot.entity.Member;
 
 @Repository
 public interface LocalFestivalsRepository extends JpaRepository<LocalFestivals, Long>{
