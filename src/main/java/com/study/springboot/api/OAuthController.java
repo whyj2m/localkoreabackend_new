@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.study.springboot.service.OAuthService;
 
 @RestController
-@RequestMapping("/oauth")
+@RequestMapping("/localkorea/oauth")
 public class OAuthController {
 	@Autowired
 	private OAuthService oAuthService;
