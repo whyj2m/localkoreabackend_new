@@ -1,12 +1,7 @@
 package com.study.springboot.service;
 
-import java.util.Optional;
-
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import com.study.springboot.entity.Member;
-import com.study.springboot.repository.MemberRepository;
 
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

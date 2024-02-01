@@ -12,10 +12,8 @@ import com.study.springboot.api.response.HeartDetail;
 import com.study.springboot.api.response.HeartList;
 import com.study.springboot.api.response.LocalPlacesDetail;
 import com.study.springboot.entity.Heart;
-import com.study.springboot.entity.LocalPlaces;
 import com.study.springboot.repository.HeartRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

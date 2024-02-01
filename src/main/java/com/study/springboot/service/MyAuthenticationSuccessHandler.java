@@ -3,7 +3,6 @@ package com.study.springboot.service;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
