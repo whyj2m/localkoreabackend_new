@@ -22,50 +22,50 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class HeartApi {
-	
+
 	@Autowired
 	private HeartService heartService;
-	
+
 	@GetMapping("/hearts")
-	public List<HeartList> getHeartList(){
+	@CrossOrigin
+	public List<HeartList> getHeartList() {
 		return heartService.findAllHearts();
 	}
-	
+
 	@GetMapping("/hearts/{memberid}")
+	@CrossOrigin
 	public List<HeartDetail> getHeartsByUserId(@PathVariable(name = "memberid") String memberId) {
-	    return heartService.findHeartsByUserId(memberId);
+		return heartService.findHeartsByUserId(memberId);
 	}
-	
-	 @GetMapping("/heart/check/{memberid}/{placeno}")
-	    public ResponseEntity<Boolean> checkIfHearted(
-	            @PathVariable(name = "memberid") String memberId,
-	            @PathVariable(name = "placeno") Long placeNo
-	    ) {
-	        try {
-	            boolean isHearted = heartService.checkIfHearted(memberId, placeNo);
-	            return ResponseEntity.ok(isHearted);
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-	        }
-	    }
+
+	@GetMapping("/heart/check/{memberid}/{placeno}")
+	@CrossOrigin
+	public ResponseEntity<Boolean> checkIfHearted(@PathVariable(name = "memberid") String memberId,
+			@PathVariable(name = "placeno") Long placeNo) {
+		try {
+			boolean isHearted = heartService.checkIfHearted(memberId, placeNo);
+			return ResponseEntity.ok(isHearted);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+		}
+	}
+
 	@GetMapping("/heart/{heartNo}")
-	public HeartDetail getHeart(
-			@PathVariable(name = "heartNo") Long heartNo
-			) {
+	@CrossOrigin
+	public HeartDetail getHeart(@PathVariable(name = "heartNo") Long heartNo) {
 		return heartService.findById(heartNo);
 	}
-	
+
 	@GetMapping("/hearts/details/{memberid}")
-    public List<HeartDetail> getHeartDetailsByUserId(@PathVariable(name = "memberid") String memberId) {
-        return heartService.findHeartDetailsByUserId(memberId);
-    }
-	
+	@CrossOrigin
+	public List<HeartDetail> getHeartDetailsByUserId(@PathVariable(name = "memberid") String memberId) {
+		return heartService.findHeartDetailsByUserId(memberId);
+	}
+
 	@PostMapping("/heart")
-	public ResponseEntity<String> inserHeart(
-			@RequestBody CreateAndEditHeartRequest request
-			){
+	@CrossOrigin
+	public ResponseEntity<String> inserHeart(@RequestBody CreateAndEditHeartRequest request) {
 		try {
 			heartService.insertHeart(request);
 			return ResponseEntity.ok("Data Input Completed");
@@ -73,7 +73,7 @@ public class HeartApi {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error" + e.getMessage());
 		}
 	}
-	
+
 //	@PutMapping("/heart/{heartNo}")
 //	public void editHeart(
 //			@PathVariable(name = "heartNo") Long heartNo,
@@ -81,17 +81,16 @@ public class HeartApi {
 //			) {
 //		heartService.editHeart(heartNo, request);
 //	}
-	
-	 @DeleteMapping("/hearts/{memberid}/{placeno}")
-	    public ResponseEntity<String> deleteHeart(
-	            @PathVariable(name = "memberid") String memberId,
-	            @PathVariable(name = "placeno") Long placeNo
-	    ) {
-	        try {
-	            heartService.deleteHeartByMemberIdAndPlaceNo(memberId, placeNo);
-	            return ResponseEntity.ok("Heart deleted successfully");
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error: " + e.getMessage());
-	        }
-	    }
+
+	@DeleteMapping("/hearts/{memberid}/{placeno}")
+	@CrossOrigin
+	public ResponseEntity<String> deleteHeart(@PathVariable(name = "memberid") String memberId,
+			@PathVariable(name = "placeno") Long placeNo) {
+		try {
+			heartService.deleteHeartByMemberIdAndPlaceNo(memberId, placeNo);
+			return ResponseEntity.ok("Heart deleted successfully");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error: " + e.getMessage());
+		}
+	}
 }

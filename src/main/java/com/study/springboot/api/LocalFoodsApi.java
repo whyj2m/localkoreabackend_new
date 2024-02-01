@@ -24,18 +24,19 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class LocalFoodsApi {
 	
 	@Autowired
 	private LocalFoodsService localFoodsService;
 	
 	@GetMapping("/localFoods/all")
+	@CrossOrigin
 	public List<LocalFoodsList> getLocalFoodsList(){
 		return localFoodsService.findAllFoods();
 	}
 	
 	@GetMapping("/localFood/{foodNo}")
+	@CrossOrigin
 	public LocalFoodsDetail getFood(
 			@PathVariable(name="foodNo") Long foodNo
 			) {
@@ -43,6 +44,7 @@ public class LocalFoodsApi {
 	}
 
 	@GetMapping("/localFoods/{localNo}")
+	@CrossOrigin
 	public List<LocalFoodsList> getFoodByLocalNo(
 			@PathVariable(name="localNo") Location localNo
 			) {
@@ -50,6 +52,7 @@ public class LocalFoodsApi {
 	}
 	
 	@PostMapping("/localFood")
+	@CrossOrigin
 	public ResponseEntity<String> insertLocalFood(
 			@RequestBody CreateAndEditLocalFoodsRequest request
 			){
@@ -62,6 +65,7 @@ public class LocalFoodsApi {
 	}
 	
 	@PutMapping("/localFood/{foodNo}")
+	@CrossOrigin
 	public void editLocalFoods(
 			@PathVariable(name="foodNo") Long foodNo,
 			@RequestBody CreateAndEditLocalFoodsRequest request
@@ -70,6 +74,7 @@ public class LocalFoodsApi {
 	}
 	
 	@DeleteMapping("/localFood/{foodNo}")
+	@CrossOrigin
 	public void deleteFood(
 			@PathVariable(name="foodNo") Long foodNo
 			) {
