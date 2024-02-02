@@ -35,10 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-# application.properties 무시 
-#/src/main/resources/application.properties
-
-# application-oauth.properties 무시 
-#/src/main/resources/application-oauth.properties
- 
