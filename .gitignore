@@ -37,7 +37,7 @@ out/
 .vscode/
 
 # application.properties 무시
-/src/main/resources/application.properties
+#/src/main/resources/application.properties
 
 # application-oauth.properties 무시
-/src/main/resources/application-oauth.properties
+#/src/main/resources/application-oauth.properties
