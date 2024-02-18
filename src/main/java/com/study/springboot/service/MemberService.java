@@ -48,7 +48,7 @@ public class MemberService {
 							.phoneNum(request.getPhoneNum())
 							.signUpAt(ZonedDateTime.now())
 							.updatedAt(ZonedDateTime.now())
-							.role(request.getRole())
+							.role("USER")
 							.authProvider(request.getAuthProvider())
 							.build();
 		memberRepository.save(member);
