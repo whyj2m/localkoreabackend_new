@@ -7,15 +7,19 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.study.springboot.api.request.CreateAndEditBoardRequest;
 import com.study.springboot.api.response.BoardDetail;
 import com.study.springboot.api.response.BoardList;
@@ -36,8 +40,13 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.core.sync.RequestBody;
+import static software.amazon.awssdk.core.sync.RequestBody.fromBytes;
 
-@Slf4j
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -47,16 +56,22 @@ public class BoardService {
 	private final LocationCategoryRepository locationCategoryRepository;
 	private final BoardReplyRepository boardReplyRepository;
 	private final MemberRepository memberRepository;
+	private final FileDataRepository fileDataRepository;
 	
 	// 파일업로드
-    private final String FOLDER_PATH = "c:\\images\\";
-	private final FileDataRepository fileDataRepository;
+//    private final String FOLDER_PATH = "c:\\images\\";
+//	private final FileDataRepository fileDataRepository;
+	
+	//s3
+	@Autowired
+	private S3Client s3Client;
+	private final String S3_BUCKET_NAME = "localkorea-s3-bucket";
 	
 	// 글 작성
 	public Board insertBoard(CreateAndEditBoardRequest request, 
 			@RequestParam(value = "id") String id, // id 파라미터를 통해 member가져오기
 	        @RequestParam(required = false) List<MultipartFile> files) throws IOException {
-	    log.info("insert");
+//	    log.info("insert");
 	    BoardCategory boardCategory = boardCategoryRepository.findById(request.getBoardCno()).orElse(null);
 	    LocationCategory locationCategory = locationCategoryRepository.findById(request.getLocationCno()).orElse(null);
 	    
@@ -84,31 +99,40 @@ public class BoardService {
 	    
 	    Long bno = board.getBno();
 	    
-	    // 파일 첨부가 있는 경우에만 파일 업로드 수행
+	 // 파일 첨부가 있는 경우에만 파일 업로드 수행
 	    if (filesAttached) {
-	        String folderPath = FOLDER_PATH + bno + File.separator;
-	        File folder = new File(folderPath);
+            // 파일 업로드
+            for (MultipartFile file : files) {
+                // AWS S3에 파일 업로드
+                String s3Key = "board/" + bno + "/" + file.getOriginalFilename();
 
-	        if (!folder.exists()) {
-	            folder.mkdirs(); // 폴더 생성
-	        }
+                // 파일 데이터를 RequestBody.fromBytes(file.getBytes())로 설정
+                RequestBody requestBody = RequestBody.fromBytes(file.getBytes());
 
-	        // 파일 업로드
-	        for (MultipartFile file : files) {
-	            String filePath = folderPath + file.getOriginalFilename();
-	            FileData fileData = fileDataRepository.save(
-	                    FileData.builder()
-	                            .uuid(file.getOriginalFilename())
-	                            .origin(file.getContentType())
-	                            .filePath(filePath)
-	                            .boardBno(board.getBno())
-	                            .build()
-	            );
-	            file.transferTo(new File(filePath));
-	        }
-	    }
-	    return board;
-	}
+                // AWS S3로 파일 업로드
+                PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                        .bucket(S3_BUCKET_NAME)
+                        .key(s3Key)
+                        .metadata(Collections.singletonMap("Content-Type", file.getContentType()))
+                        .build();
+
+                PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, requestBody);
+
+                // 파일 데이터 저장
+                FileData fileData = fileDataRepository.save(
+                        FileData.builder()
+                                .uuid(file.getOriginalFilename())
+                                .origin(file.getContentType())
+                                .s3Key(s3Key)
+                                .boardBno(board.getBno())
+                                .build()
+                );
+            }
+        }
+
+        return board;
+
+	}	
 	
 	// 관광지 추천 게시글 조회
 	@Transactional
