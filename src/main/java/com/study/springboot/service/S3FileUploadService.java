@@ -5,23 +5,34 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
+import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class S3FileUploadService {
 
     private final S3Client amazonS3Client;
     private final String bucketName;
+    
+    @Value("${cloud.aws.s3.bucket}")
+    private String injectedBucketName;
+    
+    public S3FileUploadService() {
+        this.amazonS3Client = null; 
+        this.bucketName = null;
+    }
 
-    public S3FileUploadService(S3Client amazonS3Client, String bucketName) {
+    public S3FileUploadService(S3Client amazonS3Client) {
         this.amazonS3Client = amazonS3Client;
-        this.bucketName = bucketName;
+        this.bucketName = injectedBucketName;
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
