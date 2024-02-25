@@ -2,6 +2,8 @@ package com.study.springboot.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
@@ -10,12 +12,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.util.IOUtils;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.study.springboot.api.request.CreateAndEditBoardRequest;
 import com.study.springboot.api.response.BoardDetail;
 import com.study.springboot.api.response.BoardList;
@@ -52,63 +65,67 @@ public class BoardService {
     private final String FOLDER_PATH = "c:\\images\\";
 	private final FileDataRepository fileDataRepository;
 	
-	// 글 작성
-	public Board insertBoard(CreateAndEditBoardRequest request, 
-			@RequestParam(value = "id") String id, // id 파라미터를 통해 member가져오기
-	        @RequestParam(required = false) List<MultipartFile> files) throws IOException {
-	    log.info("insert");
-	    BoardCategory boardCategory = boardCategoryRepository.findById(request.getBoardCno()).orElse(null);
-	    LocationCategory locationCategory = locationCategoryRepository.findById(request.getLocationCno()).orElse(null);
-	    
-	    // 파일 첨부 확인
-	    boolean filesAttached = files != null && !files.isEmpty();
-	    
-	    // 첨부 파일 없을 시 빈 리스트로 설정
-	    if (!filesAttached) {
-	        files = new ArrayList<>(); // 파일 리스트를 빈 리스트로 설정
-	    }
-	    
-	    Member member = memberRepository.findById(id).orElse(null); // 멤버에서 id
+	private final AmazonS3Client amazonS3Client;
+	 private final AmazonS3 amazonS3;
 
-	    Board board = Board.builder()
-	            .title(request.getTitle())
-	            .content(request.getContent())
-	            .regDate(ZonedDateTime.now())
-	            .updateDate(ZonedDateTime.now())
-	            .cno(boardCategory)
-	            .locno(locationCategory)
-	            .location(request.getLocation())
-	            .id(member)
-	            .build();
-	    boardRepository.save(board);
-	    
-	    Long bno = board.getBno();
-	    
-	    // 파일 첨부가 있는 경우에만 파일 업로드 수행
-	    if (filesAttached) {
-	        String folderPath = FOLDER_PATH + bno + File.separator;
-	        File folder = new File(folderPath);
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+	
+    // 글 작성
+    public Board insertBoard(CreateAndEditBoardRequest request, 
+            @RequestParam(value = "id") String id,
+            @RequestParam(required = false) List<MultipartFile> files) throws IOException {
+        log.info("insert");
+        BoardCategory boardCategory = boardCategoryRepository.findById(request.getBoardCno()).orElse(null);
+        LocationCategory locationCategory = locationCategoryRepository.findById(request.getLocationCno()).orElse(null);
 
-	        if (!folder.exists()) {
-	            folder.mkdirs(); // 폴더 생성
-	        }
+        // 파일 첨부 확인
+        boolean filesAttached = files != null && !files.isEmpty();
 
-	        // 파일 업로드
-	        for (MultipartFile file : files) {
-	            String filePath = folderPath + file.getOriginalFilename();
-	            FileData fileData = fileDataRepository.save(
-	                    FileData.builder()
-	                            .uuid(file.getOriginalFilename())
-	                            .origin(file.getContentType())
-	                            .filePath(filePath)
-	                            .boardBno(board.getBno())
-	                            .build()
-	            );
-	            file.transferTo(new File(filePath));
-	        }
-	    }
-	    return board;
-	}
+        // 첨부 파일 없을 시 빈 리스트로 설정
+        if (!filesAttached) {
+            files = new ArrayList<>(); // 파일 리스트를 빈 리스트로 설정
+        }
+
+        Member member = memberRepository.findById(id).orElse(null); // 멤버에서 id
+
+        Board board = Board.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .regDate(ZonedDateTime.now())
+                .updateDate(ZonedDateTime.now())
+                .cno(boardCategory)
+                .locno(locationCategory)
+                .location(request.getLocation())
+                .id(member)
+                .build();
+        boardRepository.save(board);
+
+        // 파일 첨부가 있는 경우에만 파일 업로드 수행
+        if (filesAttached) {
+            for (MultipartFile file : files) {
+                String uuid = UUID.randomUUID().toString();
+                String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+                String cdn = uuid + ext;
+
+                // Amazon S3에 업로드
+                ObjectMetadata metadata = new ObjectMetadata();
+                amazonS3Client.putObject(new PutObjectRequest(bucket, cdn, file.getInputStream(), metadata));
+
+             // DB에 파일 정보 저장
+                FileData fileData = FileData.builder()
+                    .uuid(file.getOriginalFilename()) // S3에 저장된 파일명을 원본 파일명으로 사용
+                    .origin(file.getOriginalFilename())
+                    .boardBno(board.getBno())
+                    .build();
+
+                fileDataRepository.save(fileData);
+            }
+        }
+
+        return board;
+    }
+
 	
 	// 관광지 추천 게시글 조회
 	@Transactional
@@ -152,34 +169,46 @@ public class BoardService {
                 .location(board.getLocation())
 	            .build();
 	}
+		
+	// 이미지 조회
+	public byte[] getImageData(Long boardBno) throws IOException {
+        String imageUrl = getImageUrl(boardBno);
+
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            URL url = new URL(imageUrl);
+            try (InputStream in = url.openStream()) {
+                return IOUtils.toByteArray(in);
+            }
+        }
+        return null;
+    }
 	
-	// bno별 이미지조회
-	public byte[] downloadImageSystem(Long boardBno) {
-	    List<FileData> fileDataList = fileDataRepository.findByBoardBno(boardBno);
-
-	    if (fileDataList.isEmpty()) {
-	    	 return new byte[0];
-	    }
-	    
-	    FileData fileData = fileDataList.get(0);
-
-	    String filePath = fileData.getFilePath();
-
-	    try {
-	        return Files.readAllBytes(Paths.get(filePath));
-	    }catch (NoSuchFileException e) { // 파일없을때
-	    	return new byte[0]; // 빈배열로 전송 오류 안 나오도록  	
-	    }
-	    catch (IOException e) { 
-	        e.printStackTrace();
-	        return new byte[0];
-	    }
+	// 이미지 주소
+	public String getImageUrl(Long boardBno) {
+	    String imageKey = "images/" + boardBno + ".jpg";
+	
+        // S3 URL 생성
+        return amazonS3Client.getUrl(bucket, imageKey).toString();
 	}
-
+		
 	// 이미지 정보
 	public List<FileData> findByBoardBno(Long boardBno) {
 		return fileDataRepository.findByBoardBno(boardBno);
 	}
+	
+	// local 이미지 조회
+//		@GetMapping("/api/images/{bno}")
+//		@CrossOrigin
+//		public ResponseEntity<?> getImage(@PathVariable("bno") Long bno) throws IOException{
+//			byte[] downloadImage = boardService.downloadImageSystem(bno);
+//			if(downloadImage != null) {
+//				return ResponseEntity.status(HttpStatus.OK)
+//						.contentType(MediaType.valueOf("image/png"))
+//						.body(downloadImage);
+//			}else {
+//				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//			}
+//		}
 
 	// 여행메이트 게시글 조회
 	public List<BoardList> findByCompany() {
