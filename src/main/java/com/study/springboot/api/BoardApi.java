@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,9 +33,12 @@ import com.study.springboot.repository.MemberRepository;
 import com.study.springboot.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class BoardApi {
 
 	private final BoardService boardService;
@@ -175,30 +179,39 @@ public class BoardApi {
 		boardService.deleteReply(rno);
 	}	
 
-	// 이미지 조회
+	// 이미지조회
 	@GetMapping("/api/images/{bno}")
 	@CrossOrigin
-	public ResponseEntity<?> getImage(@PathVariable("bno") Long bno) throws IOException{
-		byte[] downloadImage = boardService.downloadImageSystem(bno);
-		if(downloadImage != null) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.contentType(MediaType.valueOf("image/png"))
-					.body(downloadImage);
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
+	public ResponseEntity<byte[]> getImage(@PathVariable("bno") Long bno) throws IOException {
+	    try {
+	        byte[] imageData = boardService.getImageData(bno);
+
+	        if (imageData != null) {
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.setContentType(MediaType.IMAGE_JPEG);
+
+	            return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	        }
+	    } catch (IOException e) {
+	    	 log.error("Error while fetching image data for bno: {}", bno, e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    }
 	}
-	
-	// 이미지 여러개 (실패)
-//	@GetMapping("/api/images/{bno}")
-//	@CrossOrigin
-//	public ResponseEntity<List<FileData>> getFileListDataByBno(@PathVariable("bno") Long bno) {
-//	    List<FileData> fileListData = boardService.findByBoardBno(bno);
+
+	  // local 이미지 조회
+//    @GetMapping("/images/{bno}")
+//    public ResponseEntity<?> getImage(@PathVariable("bno") Long bno) throws IOException {
+//        String imageUrl = boardService.getImageUrl(bno);
 //
-//	    if (fileListData != null && !fileListData.isEmpty()) {
-//	        return ResponseEntity.status(HttpStatus.OK).body(fileListData);
-//	    } else {
-//	        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//	    }
-//	}
+//        if (imageUrl != null && !imageUrl.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.OK)
+//                    .contentType(MediaType.TEXT_PLAIN)
+//                    .body(imageUrl);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//    }
+    
 }
