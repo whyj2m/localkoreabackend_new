@@ -13,7 +13,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
     	registry.addHandler(new WebSocketHandler(), "/socket")
-        .setAllowedOrigins("http://3.35.217.163");
+        .setAllowedOrigins("http://localhost:3000");
 
     }
     
