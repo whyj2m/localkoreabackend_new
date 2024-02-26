@@ -28,6 +28,9 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
 
     // bno로 단일 조회
       Optional<Board> findByBno(Long bno);
+      
+   // 이미지 주소로 게시글 조회
+//      Optional<Board> findByImageUrl(String imageUrl);
 
       /**
        * @author bhy98 백혜윤
